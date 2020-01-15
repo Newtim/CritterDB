@@ -28,7 +28,8 @@
   },
   "scripts": {
     "watch-js": "grunt watch --force",
-    "build-js": "grunt"
+    "build-js": "grunt",
+    "start": "node server.js"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
