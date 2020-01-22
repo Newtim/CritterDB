@@ -47,12 +47,19 @@
             <md-icon ng-class="{'md-accent':isOpen('mainMenuNav')}">menu</md-icon>
           </md-button>
           <span class="logo-button" style="padding-right:40px;" layout="row" layout-align="left center">      <!-- the padding here helps center 'CritterDB' title text. adjust if changing menu options. -->
-            <a hide show-gt-sm class="header-button logo md-toolbar-item md-breadcrumb md-headline" ng-href="/#/about">
+            <!--
+              <a hide show-gt-sm class="header-button logo md-toolbar-item md-breadcrumb md-headline" ng-href="/#/about">
               about
             </a>
-            <a hide show-gt-sm class="header-button logo md-toolbar-item md-breadcrumb md-headline" ng-href="/#/publishedbestiary/list/recent">
+          -->
+          <a hide show-gt-sm class="header-button logo md-toolbar-item md-breadcrumb md-headline" ng-href="/#/publishedskills">
+            skills
+          </a>
+            <!--
+              <a hide show-gt-sm class="header-button logo md-toolbar-item md-breadcrumb md-headline" ng-href="/#/publishedbestiary/list/recent">
               bestiaries
             </a>
+          -->
             <a class="logo md-toolbar-item md-breadcrumb md-headline" ng-href="/">
               <md-icon class="logo-icon" ng-style="logoStyle" md-svg-icon="{{logoIconPath}}"></md-icon>
               OpenRiftsDB
