@@ -1,16 +1,16 @@
-angular.module('myApp').factory("PublishedBestiaryCreaturePager", function(Creature) {
+angular.module('myApp').factory("PublishedSkillsCreaturePager", function(Creature) {
 
-  var PublishedBestiaryCreaturePager = function(bestiaryId,startingData,startingNextPage){
-    this.bestiaryId = bestiaryId;
+  var PublishedSkillsCreaturePager = function(SkillsId,startingData,startingNextPage){
+    this.SkillsId = SkillsId;
   	this.creatures = startingData || [];
   	this.nextPage = startingNextPage || 1;
   	this.busy = false;
   }
   
-  PublishedBestiaryCreaturePager.prototype.loadNextPage = function(callback) {
+  PublishedSkillsCreaturePager.prototype.loadNextPage = function(callback) {
   	if(!this.busy){
   		this.busy = true;
-  		Creature.getAllForPublishedBestiary(this.bestiaryId,this.nextPage,function(data){
+  		Creature.getAllForPublishedSkills(this.SkillsId,this.nextPage,function(data){
   			if(data.length>0){	//if we are receiving no more data remain busy so we don't repeat request
 	  			for(var i=0;i<data.length;i++)
 	  				this.creatures.push(data[i]);
@@ -23,5 +23,5 @@ angular.module('myApp').factory("PublishedBestiaryCreaturePager", function(Creat
   	}
   }
 
-  return PublishedBestiaryCreaturePager;
+  return PublishedSkillsCreaturePager;
 });

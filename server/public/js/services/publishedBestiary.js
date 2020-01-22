@@ -1,38 +1,38 @@
-angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,Creature,$resource) {
+angular.module('myApp').factory("PublishedSkills", function(CachedResourceAPI,Creature,$resource) {
 
-  var PublishedBestiaryAPI = new CachedResourceAPI("/api/publishedbestiaries/:id");
+  var PublishedSkillsAPI = new CachedResourceAPI("/api/publishedbestiaries/:id");
 
-	delete [PublishedBestiaryAPI.getAll];
+	delete [PublishedSkillsAPI.getAll];
 
-	PublishedBestiaryAPI.like = function(id, success, error){
+	PublishedSkillsAPI.like = function(id, success, error){
 		$resource("/api/publishedbestiaries/:id/likes").save({'id':id},"",(function(data){
       if(success)
         success(data);
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.unlike = function(id, success, error){
+	PublishedSkillsAPI.unlike = function(id, success, error){
 		$resource("/api/publishedbestiaries/:id/likes").delete({'id':id},(function(data){
       if(success)
         success(data);
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.favorite = function(id, success, error){
+	PublishedSkillsAPI.favorite = function(id, success, error){
 		$resource("/api/publishedbestiaries/:id/favorites").save({'id':id},"",(function(data){
       if(success)
         success(data);
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.unfavorite = function(id, success, error){
+	PublishedSkillsAPI.unfavorite = function(id, success, error){
 		$resource("/api/publishedbestiaries/:id/favorites").delete({'id':id},(function(data){
       if(success)
         success(data);
     }).bind(this),error);
 	}
 
-  PublishedBestiaryAPI.getPopular = function(page,success, error){
+  PublishedSkillsAPI.getPopular = function(page,success, error){
     $resource("/api/publishedbestiaries/popular/:page").query({ 'page': page}, function(data){
     	//don't cache as we are not getting all data fields from this request
       if(success)
@@ -40,7 +40,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-	PublishedBestiaryAPI.getRecent = function(page,success, error){
+	PublishedSkillsAPI.getRecent = function(page,success, error){
     $resource("/api/publishedbestiaries/recent/:page").query({ 'page': page}, function(data){
     	//don't cache as we are not getting all data fields from this request
       if(success)
@@ -48,7 +48,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-	PublishedBestiaryAPI.getFavorites = function(page,success, error){
+	PublishedSkillsAPI.getFavorites = function(page,success, error){
     $resource("/api/publishedbestiaries/favorites/:page").query({ 'page': page}, function(data){
     	//don't cache as we are not getting all data fields from this request
       if(success)
@@ -56,7 +56,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-	PublishedBestiaryAPI.getOwned = function(page,success, error){
+	PublishedSkillsAPI.getOwned = function(page,success, error){
     $resource("/api/publishedbestiaries/owned/:page").query({ 'page': page}, function(data){
       //don't cache as we are not getting all data fields from this request
       if(success)
@@ -64,7 +64,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-  PublishedBestiaryAPI.search = function(search,page,success, error){
+  PublishedSkillsAPI.search = function(search,page,success, error){
   	var resourceOptions = {
       'save': {
       	method:'POST',
@@ -78,7 +78,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-  PublishedBestiaryAPI.getByUser = function(userId,page,success, error){
+  PublishedSkillsAPI.getByUser = function(userId,page,success, error){
     $resource("/api/users/:userId/publishedbestiaries/:page").query({ 'userId': userId, 'page': page}, function(data){
       //don't cache as we are not getting all data fields from this request
       if(success)
@@ -86,16 +86,16 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     },error);
   }
 
-	PublishedBestiaryAPI.addComment = function(bestiaryId, comment, success, error){
-		$resource("/api/publishedbestiaries/:id/comments").save({'id':bestiaryId},comment,(function(data){
+	PublishedSkillsAPI.addComment = function(SkillsId, comment, success, error){
+		$resource("/api/publishedbestiaries/:id/comments").save({'id':SkillsId},comment,(function(data){
       if(success)
         success(data);
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.updateComment = function(bestiaryId, commentId, comment, success, error){
+	PublishedSkillsAPI.updateComment = function(SkillsId, commentId, comment, success, error){
 		var queryParams = {
-			id: bestiaryId,
+			id: SkillsId,
 			commentId: commentId
 		};
 		var resourceOptions = {
@@ -107,9 +107,9 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.deleteComment = function(bestiaryId, commentId, success, error){
+	PublishedSkillsAPI.deleteComment = function(SkillsId, commentId, success, error){
 		var queryParams = {
-			id: bestiaryId,
+			id: SkillsId,
 			commentId: commentId
 		};
 		$resource("/api/publishedbestiaries/:id/comments/:commentId").delete(queryParams,(function(data){
@@ -118,7 +118,7 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     }).bind(this),error);
 	}
 
-	PublishedBestiaryAPI.getMostPopular = function(success, error){
+	PublishedSkillsAPI.getMostPopular = function(success, error){
 		var resourceOptions = {
       'query': {
       	method:'GET',
@@ -128,34 +128,34 @@ angular.module('myApp').factory("PublishedBestiary", function(CachedResourceAPI,
     $resource("/api/publishedbestiaries/mostpopular",{},resourceOptions).query({}, success,error);
   }
 
-  PublishedBestiaryAPI.listConstants = {
+  PublishedSkillsAPI.listConstants = {
 		popular: {
 			type: "popular",
-			retrievalFunction: PublishedBestiaryAPI.getPopular,
+			retrievalFunction: PublishedSkillsAPI.getPopular,
 			name: 'Popular',
-			path: "/#/publishedbestiary/list/popular"
+			path: "/#/publishedSkills/list/popular"
 		},
 		recent: {
 			type: "recent",
-			retrievalFunction: PublishedBestiaryAPI.getRecent,
+			retrievalFunction: PublishedSkillsAPI.getRecent,
 			name: 'Recent',
-			path: "/#/publishedbestiary/list/recent"
+			path: "/#/publishedSkills/list/recent"
 		},
 		favorites: {
 			type: "favorites",
-			retrievalFunction: PublishedBestiaryAPI.getFavorites,
+			retrievalFunction: PublishedSkillsAPI.getFavorites,
 			name: 'My Favorites',
-			path: "/#/publishedbestiary/list/favorites",
+			path: "/#/publishedSkills/list/favorites",
 			loginRequired: true
 		},
 		owned: {
 			type: "owned",
-			retrievalFunction: PublishedBestiaryAPI.getOwned,
+			retrievalFunction: PublishedSkillsAPI.getOwned,
 			name: 'My Bestiaries',
-			path: "/#/publishedbestiary/list/owned",
+			path: "/#/publishedSkills/list/owned",
 			loginRequired: true
 		}
 	};
 
-  return PublishedBestiaryAPI;
+  return PublishedSkillsAPI;
 });

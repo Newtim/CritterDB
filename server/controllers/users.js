@@ -1,7 +1,7 @@
 
 //Get mongoose model
 var User = require('../models/user');
-var Bestiary = require('../models/bestiary');
+var Skills = require('../models/Skills');
 var Creature = require('../models/creature');
 var jwt = require("jsonwebtoken");
 var config = require("../config");
@@ -206,7 +206,7 @@ exports.findBestiariesByOwner = function(req, res) {
                 if(err)
                     res.status(400).send(err);
                 else{
-                    Bestiary.find({
+                    Skills.find({
                         ownerId: doc._id
                     }, function(err, docs){
                         if(err)
@@ -239,20 +239,20 @@ exports.searchCreatures = function(req, res) {
                 if(err)
                     res.status(400).send(err);
                 else{
-                    Bestiary.find({
+                    Skills.find({
                         ownerId: doc._id
                     }, function(err, bestiaries){
                         if(err)
                             res.status(400).send(err);
                         else {
-                            const userBestiaryIds = bestiaries.map(function(bestiary) { return bestiary._id; });
+                            const userSkillsIds = bestiaries.map(function(Skills) { return Skills._id; });
                             const creaturesQuery = Object.assign({},req.query);
                             if(creaturesQuery.name) {
                                 creaturesQuery.name = {
                                     $regex: new RegExp(creaturesQuery.name, "i")
                                 };
                             }
-                            // Creature must match the provided query AND either be in a public bestiary or
+                            // Creature must match the provided query AND either be in a public Skills or
                             // be in one of this user's bestiaries.
                             const searchQuery = {
                                 $and: [
@@ -260,14 +260,14 @@ exports.searchCreatures = function(req, res) {
                                     {
                                         $or: [
                                             {
-                                                publishedBestiaryId: {
+                                                publishedSkillsId: {
                                                     $exists: true,
                                                     $ne: null
                                                 }
                                             },
                                             {
-                                                bestiaryId: {
-                                                    $in: userBestiaryIds
+                                                SkillsId: {
+                                                    $in: userSkillsIds
                                                 }
                                             }
                                         ]
