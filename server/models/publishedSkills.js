@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var autopopulate = require('mongoose-autopopulate');
-var Creature = require('./creature');
+var Creature = require('./skill');
 var Like = require('./like');
 var Favorite = require('./favorite');
 var Comment = require('./comment');
