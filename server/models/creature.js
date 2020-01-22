@@ -195,14 +195,14 @@ var CreatureSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        bestiaryId: {
+        SkillsId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Bestiary',
+          ref: 'Skills',
           index: true
         },
-        publishedBestiaryId: {
+        publishedSkillsId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'PublishedBestiary',
+            ref: 'PublishedSkills',
             index: true
         },
         flavor: {

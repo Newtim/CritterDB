@@ -5,7 +5,7 @@ var Like = require('./like');
 var Favorite = require('./favorite');
 var Comment = require('./comment');
 
-var PublishedBestiarySchema = new mongoose.Schema(
+var PublishedSkillsSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -30,6 +30,6 @@ var PublishedBestiarySchema = new mongoose.Schema(
       default: 0
     }
   });
-PublishedBestiarySchema.plugin(autopopulate);
+PublishedSkillsSchema.plugin(autopopulate);
 
-module.exports = mongoose.model('PublishedBestiary',PublishedBestiarySchema);
+module.exports = mongoose.model('PublishedSkills',PublishedSkillsSchema);

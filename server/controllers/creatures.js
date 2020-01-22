@@ -1,20 +1,20 @@
 
 //Get mongoose Creature model
 var Creature = require('../models/creature');
-var Bestiary = require('../models/bestiary');
-var PublishedBestiary = require('../models/publishedBestiary');
+var Skills = require('../models/Skills');
+var PublishedSkills = require('../models/publishedSkills');
 var jwt = require("jsonwebtoken");
 var config = require("../config");
 exports.PAGE_SIZE = 25;
 
-var authenticateBestiaryByOwner = function(req, bestiary, callback){
+var authenticateSkillsByOwner = function(req, Skills, callback){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
         jwt.verify(token,config.secret,function(err,decoded){
             if(err)
                 callback("Failed to authenticate token.");
             else{
-                if(decoded._doc._id != bestiary.ownerId)
+                if(decoded._doc._id != Skills.ownerId)
                     callback("Not authorized for access.");
                 else
                     callback(null);
@@ -26,14 +26,14 @@ var authenticateBestiaryByOwner = function(req, bestiary, callback){
     }
 }
 
-var authenticatePublishedBestiaryByOwner = function(req, publishedBestiary, callback){
+var authenticatePublishedSkillsByOwner = function(req, publishedSkills, callback){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
         jwt.verify(token,config.secret,function(err,decoded){
             if(err)
                 callback("Failed to authenticate token.");
             else{
-                var ownerId = publishedBestiary.owner._id || publishedBestiary.owner;
+                var ownerId = publishedSkills.owner._id || publishedSkills.owner;
                 if(decoded._doc._id != ownerId)
                     callback("Not authorized for access.");
                 else
@@ -46,32 +46,32 @@ var authenticatePublishedBestiaryByOwner = function(req, publishedBestiary, call
     }
 }
 
-var authenticateCreatureByBestiary = function(req, creature, callback){
-    if(creature.bestiaryId && creature.publishedBestiaryId){
+var authenticateCreatureBySkills = function(req, creature, callback){
+    if(creature.SkillsId && creature.publishedSkillsId){
         setTimeout(function () {
             callback("Creature cannot be in multiple bestiaries.")
         });
     }
-    else if(creature.bestiaryId){
-        var query = {'_id':creature.bestiaryId};
-        Bestiary.findOne(query, function(err, doc){
+    else if(creature.SkillsId){
+        var query = {'_id':creature.SkillsId};
+        Skills.findOne(query, function(err, doc){
             if(err)
                 callback(err.message);
             else if(doc)
-                authenticateBestiaryByOwner(req, doc, callback);
+                authenticateSkillsByOwner(req, doc, callback);
             else
-                callback("Bestiary not found.");
+                callback("Skills not found.");
         });
     }
-    else if(creature.publishedBestiaryId){
-        var query = {'_id':creature.publishedBestiaryId};
-        PublishedBestiary.findOne(query, function(err, doc){
+    else if(creature.publishedSkillsId){
+        var query = {'_id':creature.publishedSkillsId};
+        PublishedSkills.findOne(query, function(err, doc){
             if(err)
                 callback(err.message);
             else if(doc)
-                authenticatePublishedBestiaryByOwner(req, doc, callback);
+                authenticatePublishedSkillsByOwner(req, doc, callback);
             else
-                callback("Published Bestiary not found.");
+                callback("Published Skills not found.");
         });
     }
     else{
@@ -87,7 +87,7 @@ var authenticateViewCreatureAccess = function(req, creature, callback) {
             callback(null)
         });
     } else {
-        authenticateCreatureByBestiary(req, creature, callback);
+        authenticateCreatureBySkills(req, creature, callback);
     }
 }
 
@@ -127,7 +127,7 @@ exports.findAll = function(req, res) {
 exports.create = function(req, res) {
     var creature = new Creature(req.body);
 
-    authenticateCreatureByBestiary(req, creature, function(err){
+    authenticateCreatureBySkills(req, creature, function(err){
         if(err) {
             res.status(400).send(err);
         }
@@ -158,7 +158,7 @@ exports.updateById = function(req, res) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateCreatureByBestiary(req, doc, function(err){
+            authenticateCreatureBySkills(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
@@ -188,7 +188,7 @@ exports.deleteById = function(req, res) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateCreatureByBestiary(req, doc, function(err){
+            authenticateCreatureBySkills(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{

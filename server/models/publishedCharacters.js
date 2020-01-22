@@ -32,4 +32,4 @@ var PublishedCharactersSchema = new mongoose.Schema(
   });
   PublishedCharactersSchema.plugin(autopopulate);
 
-module.exports = mongoose.model('PublishedBestiary',PublishedCharactersSchema);
+module.exports = mongoose.model('PublishedCharacters',PublishedCharactersSchema);
