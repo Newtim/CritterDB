@@ -1,9 +1,9 @@
-angular.module('myApp').factory("Bestiary", function($resource,$sce,CachedResourceAPI) {
+angular.module('myApp').factory("Skills", function($resource,$sce,CachedResourceAPI) {
 
-  var BestiaryAPI = new CachedResourceAPI("/api/bestiaries/:id");
+  var SkillsAPI = new CachedResourceAPI("/api/bestiaries/:id");
 
   var currentUserId = undefined;  //track the current user - only pull all user bestiaries from server if the user has changed
-  BestiaryAPI.getAllForUser = function(userId, success, error){
+  SkillsAPI.getAllForUser = function(userId, success, error){
     if(currentUserId==undefined || currentUserId != userId){
       currentUserId = userId;   //update current user
       $resource("/api/users/:id/bestiaries").query({ 'id': userId}, (function(data){
@@ -26,21 +26,21 @@ angular.module('myApp').factory("Bestiary", function($resource,$sce,CachedResour
     }
   }
 
-  BestiaryAPI.newBestiaryModel = {
+  SkillsAPI.newSkillsModel = {
     name: 'New Critter Collection',
     description: ''
   };
-  BestiaryAPI.generateNewBestiary = function(userId){
+  SkillsAPI.generateNewSkills = function(userId){
     if(!userId){
       throw "Parameter userId not found";
       return undefined;
     }
     else{
-      var newBestiary = angular.copy(BestiaryAPI.newBestiaryModel);
-      newBestiary.ownerId = userId;
-      return(newBestiary);
+      var newSkills = angular.copy(SkillsAPI.newSkillsModel);
+      newSkills.ownerId = userId;
+      return(newSkills);
     }
   }
 
-  return BestiaryAPI;
+  return SkillsAPI;
 });

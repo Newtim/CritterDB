@@ -9,7 +9,7 @@ angular.module('myApp').factory("Auth", ['$cookies','$http','$location','authHtt
 
   serv.login = function(username,password,rememberme,successCallback,errorCallback){
     if(!username)
-      username = $cookies.get('bestiarymanagerusername');
+      username = $cookies.get('Skillsmanagerusername');
     if(username){
       var data = {
         'username': username,

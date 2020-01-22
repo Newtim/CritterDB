@@ -49,12 +49,12 @@ var creatureImageCtrl = function($scope,creature,html2canvas,$location) {
 		return(style);
 	}
 
-	$scope.returnToBestiary = function(){
-		$location.url("/bestiary/view/"+$scope.creature.bestiaryId);
+	$scope.returnToSkills = function(){
+		$location.url("/Skills/view/"+$scope.creature.SkillsId);
 	}
 
-	$scope.goToBestiaryList = function(){
-		$location.url("/bestiary/list");
+	$scope.goToSkillsList = function(){
+		$location.url("/Skills/list");
 	}
 
 	$scope.editCreature = function(){

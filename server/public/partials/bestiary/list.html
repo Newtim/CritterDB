@@ -14,7 +14,7 @@
 	      	{{CreatureClipboard.getAll().length}}
 	      </div>
 			</md-button>
-			<md-button ng-click="createBestiary()" class="md-fab md-mini md-accent" aria-label="Bestiary Creature">
+			<md-button ng-click="createSkills()" class="md-fab md-mini md-accent" aria-label="Skills Creature">
 				<md-icon>add</md-icon>
 				<md-tooltip md-direction="left">
 	        Create Collection
@@ -50,18 +50,18 @@
       <md-button ng-click="CreatureClipboard.clear();close('clipboardNav');" class="md-raised">Clear</md-button>
   	</div>
 	</md-sidenav>
-	<!-- BESTIARY LIST -->
+	<!-- Skills LIST -->
 	<md-content layout="column" layout-align="top center" class="background bg-color-primary-light text-color-content">
-		<md-card ng-repeat="bestiary in bestiaries | orderBy:'-lastActive'">
+		<md-card ng-repeat="Skills in bestiaries | orderBy:'-lastActive'">
 			<md-card-header>
 				<md-card-header-text>
-					<span class="md-title">{{bestiary.name}}</span>
-		      <span class="md-body-1 text-color-secondary" style="margin-top: 6px;">{{bestiary.description}}</span>
+					<span class="md-title">{{Skills.name}}</span>
+		      <span class="md-body-1 text-color-secondary" style="margin-top: 6px;">{{Skills.description}}</span>
 				</md-card-header-text>
 			</md-card-header>
 		  <md-card-actions layout="row" layout-align="end center">
-		  	<md-button ng-click="deleteBestiary($event,bestiary)">Delete</md-button>
-		    <md-button ng-href="{{getBestiaryPath(bestiary)}}">Open</md-button>
+		  	<md-button ng-click="deleteSkills($event,Skills)">Delete</md-button>
+		    <md-button ng-href="{{getSkillsPath(Skills)}}">Open</md-button>
 		  </md-card-actions>
 		</md-card>
 	</md-content>
