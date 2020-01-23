@@ -1,33 +1,33 @@
 
-var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routeParams,PublishedBestiary,PublishedBestiaryCreaturePager,PublishedBestiaryPager,UserPublishedBestiaryPager,SearchPublishedBestiaryPager,CreatureFilter,CreatureAPI,CreatureClipboard,$mdMedia,$mdDialog,Auth,$location,Bestiary,Creature,$window,Mongo) {
-	$scope.bestiary = bestiary;
+var publishedSkillsCtrl = function ($scope,Skills,bestiaries,owner,$routeParams,PublishedSkills,PublishedSkillsCreaturePager,PublishedSkillsPager,UserPublishedSkillsPager,SearchPublishedSkillsPager,CreatureFilter,CreatureAPI,CreatureClipboard,$mdMedia,$mdDialog,Auth,$location,Skills,Creature,$window,Mongo) {
+	$scope.Skills = Skills;
 	$scope.bestiaries = bestiaries;
 	$scope.owner = owner;
 	$scope.commentEdits = {};
 	if(bestiaries && bestiaries.length>0){
 		if($routeParams.userId)
-			$scope.bestiaryPager = new UserPublishedBestiaryPager($routeParams.userId,bestiaries,2);
-		else if(!$routeParams.bestiaryType)
-			$scope.bestiaryPager = new SearchPublishedBestiaryPager(bestiaries,1);
+			$scope.SkillsPager = new UserPublishedSkillsPager($routeParams.userId,bestiaries,2);
+		else if(!$routeParams.SkillsType)
+			$scope.SkillsPager = new SearchPublishedSkillsPager(bestiaries,1);
 		else
-			$scope.bestiaryPager = new PublishedBestiaryPager($routeParams.bestiaryType,bestiaries,2);
+			$scope.SkillsPager = new PublishedSkillsPager($routeParams.SkillsType,bestiaries,2);
 	}
-	if($routeParams.bestiaryType && PublishedBestiary.listConstants[$routeParams.bestiaryType])
-		$scope.bestiaryType = PublishedBestiary.listConstants[$routeParams.bestiaryType].name;
+	if($routeParams.SkillsType && PublishedSkills.listConstants[$routeParams.SkillsType])
+		$scope.SkillsType = PublishedSkills.listConstants[$routeParams.SkillsType].name;
 
-	$scope.bestiary.creaturesLoading = true;
+	$scope.Skills.creaturesLoading = true;
 
 	//Recursively loads all creatures
 	function loadNextPage(){
-		$scope.bestiaryCreaturePager.loadNextPage(loadNextPage);
+		$scope.SkillsCreaturePager.loadNextPage(loadNextPage);
 	}
 
 	var loadCreatures = function(){
-		if($scope.bestiary._id){
-			Creature.getAllForPublishedBestiary($scope.bestiary._id,1,function(data){
-				$scope.bestiary.creaturesLoading = false;
-				$scope.bestiary.creatures = data;
-				$scope.bestiaryCreaturePager = new PublishedBestiaryCreaturePager($scope.bestiary._id,$scope.bestiary.creatures,2);
+		if($scope.Skills._id){
+			Creature.getAllForPublishedSkills($scope.Skills._id,1,function(data){
+				$scope.Skills.creaturesLoading = false;
+				$scope.Skills.creatures = data;
+				$scope.SkillsCreaturePager = new PublishedSkillsCreaturePager($scope.Skills._id,$scope.Skills.creatures,2);
 				loadNextPage();
 				if(!$scope.$$phase)
 					$scope.$digest();
@@ -41,7 +41,7 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 	}
 
 	$scope.getStatBlockSize = function(index){
-		if($scope.bestiary.creatures && $scope.bestiary.creatures.length>24){
+		if($scope.Skills.creatures && $scope.Skills.creatures.length>24){
 			return("mini");
 		}
 		else
@@ -49,43 +49,43 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 	}
 
 	$scope.creatureFilter = new CreatureFilter();
-	$scope.bestiaryListTypes = function(){
-		var bestiaryListTypes = [];
-		for(var key in PublishedBestiary.listConstants){
-			if (PublishedBestiary.listConstants.hasOwnProperty(key)){
-				if(!PublishedBestiary.listConstants[key].loginRequired || $scope.canInteract()){
-					var listType = angular.copy(PublishedBestiary.listConstants[key]);
-					bestiaryListTypes.push(listType);
+	$scope.SkillsListTypes = function(){
+		var SkillsListTypes = [];
+		for(var key in PublishedSkills.listConstants){
+			if (PublishedSkills.listConstants.hasOwnProperty(key)){
+				if(!PublishedSkills.listConstants[key].loginRequired || $scope.canInteract()){
+					var listType = angular.copy(PublishedSkills.listConstants[key]);
+					SkillsListTypes.push(listType);
 				}
 			}
 		}
-		return(bestiaryListTypes);
+		return(SkillsListTypes);
 	}();
-	$scope.getCurrentBestiaryListType = function(){
-		return(PublishedBestiary.listConstants[$routeParams.bestiaryType]);
+	$scope.getCurrentSkillsListType = function(){
+		return(PublishedSkills.listConstants[$routeParams.SkillsType]);
 	}
 
 	var creatureApiOptions = {
 		copy: Auth.isLoggedIn(),
-		share: ($scope.bestiary.owner && Auth.user && $scope.bestiary.owner._id == Auth.user._id),
+		share: ($scope.Skills.owner && Auth.user && $scope.Skills.owner._id == Auth.user._id),
 		export:true
 	}
 	$scope.creatureApi = new CreatureAPI(creatureApiOptions);
 
 	$scope.CreatureClipboard = CreatureClipboard;
 
-	$scope.getPublishedBestiaryListPath = function(){
-		return("/#/publishedbestiary/list/recent");
+	$scope.getPublishedSkillsListPath = function(){
+		return("/#/publishedSkills/list/recent");
 	}
 
-	$scope.getBestiaryPath = function(bestiary){
-		if(bestiary)
-			return("/#/publishedbestiary/view/"+bestiary._id);
+	$scope.getSkillsPath = function(Skills){
+		if(Skills)
+			return("/#/publishedSkills/view/"+Skills._id);
 		else
 			return("");
 	}
 
-	$scope.getUserBestiaryListPath = function(user){
+	$scope.getUserSkillsListPath = function(user){
 		if(user)
 			return("/#/user/"+user._id+"/publishedbestiaries");
 		else
@@ -93,89 +93,89 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 	}
 
 	$scope.goToSearchPage = function(){
-		$location.path("/publishedbestiary/search");
+		$location.path("/publishedSkills/search");
 	}
 
-	$scope.bestiarySortFunction = function(bestiary) {
-		if($routeParams.bestiaryType=="popular")
-			return(bestiary.popularity);
+	$scope.SkillsSortFunction = function(Skills) {
+		if($routeParams.SkillsType=="popular")
+			return(Skills.popularity);
 		else
-			return(-1*parseInt("0x"+bestiary._id));
+			return(-1*parseInt("0x"+Skills._id));
 	}
 
 	$scope.goBack = function(){
 		$window.history.back();
 	}
 
-	$scope.editPublishedBestiary = function(ev){
+	$scope.editPublishedSkills = function(ev){
 		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
     $mdDialog.show({
-      controller: publishBestiaryCtrl,
-      templateUrl: '/assets/partials/publishedBestiary/edit.html',
+      controller: publishSkillsCtrl,
+      templateUrl: '/assets/partials/publishedSkills/edit.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true,
       locals: {
-      	'baseBestiary': undefined,
-      	'publishedBestiary': $scope.bestiary
+      	'baseSkills': undefined,
+      	'publishedSkills': $scope.Skills
       },
       fullscreen: useFullScreen
-    }).then(function(updatedBestiary){
-    	$scope.bestiary.name = updatedBestiary.name;
-    	$scope.bestiary.description = updatedBestiary.description;
+    }).then(function(updatedSkills){
+    	$scope.Skills.name = updatedSkills.name;
+    	$scope.Skills.description = updatedSkills.description;
     });
 	}
 
-	$scope.deletePublishedBestiary = function(ev){
+	$scope.deletePublishedSkills = function(ev){
     var confirm = $mdDialog.confirm()
 			.title("Confirm Deletion")
-			.textContent("This published bestiary will be permanently deleted. Would you like to proceed?")
+			.textContent("This published Skills will be permanently deleted. Would you like to proceed?")
 			.ariaLabel("Confirm Delete")
 			.targetEvent(ev)
 			.ok("Delete")
 			.cancel("Cancel");
 		$mdDialog.show(confirm).then(function() {
-			PublishedBestiary.delete($scope.bestiary._id);
+			PublishedSkills.delete($scope.Skills._id);
 			//Don't wait for delete to actually finish so that the UI feels more responsive.
-			$location.url("/bestiary/list");
+			$location.url("/Skills/list");
 		});
 	}
 
-	var copyCreaturesToBestiary = function(createdBestiary){
+	var copyCreaturesToSkills = function(createdSkills){
 		var copiedCount = 0;
-		var totalToCopy = $scope.bestiary.creatures.length;
+		var totalToCopy = $scope.Skills.creatures.length;
 		var finishedCreatingCreature = function(){
 			copiedCount = copiedCount + 1;
 			if(copiedCount==totalToCopy){
-				$location.url("/bestiary/view/"+createdBestiary._id);
+				$location.url("/Skills/view/"+createdSkills._id);
 			}
 		}
-		for(var i=0;i<$scope.bestiary.creatures.length;i++){
-			var newCreature = angular.copy($scope.bestiary.creatures[i]);
+		for(var i=0;i<$scope.Skills.creatures.length;i++){
+			var newCreature = angular.copy($scope.Skills.creatures[i]);
 			newCreature._id = undefined;
-			newCreature.bestiaryId = createdBestiary._id;
-			newCreature.publishedBestiaryId = undefined;
+			newCreature.SkillsId = createdSkills._id;
+			newCreature.publishedSkillsId = undefined;
 			Creature.create(newCreature,finishedCreatingCreature,finishedCreatingCreature);
 		}
 	}
 
-	$scope.copyBestiary = function(){
-		var newBestiary = Bestiary.generateNewBestiary(Auth.user._id);
-		newBestiary.name = $scope.bestiary.name;
-		newBestiary.description = $scope.bestiary.description;
-		Bestiary.create(newBestiary,function(data){
-			copyCreaturesToBestiary(data);
+	$scope.copySkills = function(){
+		var newSkills = Skills.generateNewSkills(Auth.user._id);
+		newSkills.name = $scope.Skills.name;
+		newSkills.description = $scope.Skills.description;
+		Skills.create(newSkills,function(data){
+			copyCreaturesToSkills(data);
 		},function(err){
 			console.log("error: "+err);
 		});
 	}
 
-	$scope.printBestiary = function(){
+	$scope.printSkills = function(){
 		$window.print();
 	}
 
 	$scope.isOwner = function(){
-		return(Auth.user && Auth.user._id == $scope.bestiary.owner._id);
+		return(Auth.user && Auth.user._id == $scope.Skills.owner._id);
 	}
 
 	$scope.isOwnerOfComment = function(comment){
@@ -183,9 +183,9 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 	}
 
 	$scope.isLiked = function(){
-		if($scope.bestiary.likes){
-			for(var i=0;i<$scope.bestiary.likes.length;i++){
-				if($scope.bestiary.likes[i].userId == Auth.user._id)
+		if($scope.Skills.likes){
+			for(var i=0;i<$scope.Skills.likes.length;i++){
+				if($scope.Skills.likes[i].userId == Auth.user._id)
 					return true;
 			}
 		}
@@ -194,19 +194,19 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 
 	$scope.toggleLike = function(){
 		if($scope.isLiked())
-			PublishedBestiary.unlike($scope.bestiary._id,function(data){
-				$scope.bestiary.likes = data.likes;
+			PublishedSkills.unlike($scope.Skills._id,function(data){
+				$scope.Skills.likes = data.likes;
 			});
 		else
-			PublishedBestiary.like($scope.bestiary._id,function(data){
-				$scope.bestiary.likes = data.likes;
+			PublishedSkills.like($scope.Skills._id,function(data){
+				$scope.Skills.likes = data.likes;
 			});
 	}
 
 	$scope.isFavorite = function(){
-		if($scope.bestiary.favorites){
-			for(var i=0;i<$scope.bestiary.favorites.length;i++){
-				if($scope.bestiary.favorites[i].userId == Auth.user._id)
+		if($scope.Skills.favorites){
+			for(var i=0;i<$scope.Skills.favorites.length;i++){
+				if($scope.Skills.favorites[i].userId == Auth.user._id)
 					return true;
 			}
 		}
@@ -215,12 +215,12 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 
 	$scope.toggleFavorite = function(){
 		if($scope.isFavorite())
-			PublishedBestiary.unfavorite($scope.bestiary._id,function(data){
-				$scope.bestiary.favorites = data.favorites;
+			PublishedSkills.unfavorite($scope.Skills._id,function(data){
+				$scope.Skills.favorites = data.favorites;
 			});
 		else
-			PublishedBestiary.favorite($scope.bestiary._id,function(data){
-				$scope.bestiary.favorites = data.favorites;
+			PublishedSkills.favorite($scope.Skills._id,function(data){
+				$scope.Skills.favorites = data.favorites;
 			});
 	}
 
@@ -234,9 +234,9 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 		if($scope.newComment.text.length>0){
 			$scope.newComment.author = Auth.user._id;
 			$scope.postingComment = true;
-			PublishedBestiary.addComment($scope.bestiary._id,$scope.newComment,function(data){
+			PublishedSkills.addComment($scope.Skills._id,$scope.newComment,function(data){
 				resetNewComment();
-				$scope.bestiary.comments = data.comments;
+				$scope.Skills.comments = data.comments;
 				$scope.postingComment = false;
 			},function(err){
 				$scope.postingComment = false;
@@ -263,8 +263,8 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 		//Take effect immediately before we actually talk to the server
 		comment.text = $scope.commentEdits[comment._id].text;
 		resetCommentEdits(comment);
-		PublishedBestiary.updateComment($scope.bestiary._id,comment._id,comment,function(data){
-			$scope.bestiary.comments = data.comments;
+		PublishedSkills.updateComment($scope.Skills._id,comment._id,comment,function(data){
+			$scope.Skills.comments = data.comments;
 		});
 	}
 
@@ -277,16 +277,16 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 			.ok("Delete")
 			.cancel("Cancel");
 		$mdDialog.show(confirm).then(function() {
-			PublishedBestiary.deleteComment($scope.bestiary._id,id,function(data){
-				$scope.bestiary.comments = data.comments;
+			PublishedSkills.deleteComment($scope.Skills._id,id,function(data){
+				$scope.Skills.comments = data.comments;
 			});
 		});
 	}
 
 	$scope.getCommentsHeader = function(){
-		if($scope.bestiary && $scope.bestiary.comments){
-			var header = $scope.bestiary.comments.length + " comment";
-			if($scope.bestiary.comments.length != 1)
+		if($scope.Skills && $scope.Skills.comments){
+			var header = $scope.Skills.comments.length + " comment";
+			if($scope.Skills.comments.length != 1)
 				header = header + "s";
 			return(header);
 		}
@@ -302,10 +302,10 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 	$scope.runSearch = function(){
 		var searchCopy = angular.copy($scope.search);
 		$scope.searching = true;
-		PublishedBestiary.search(searchCopy,1,function(data){
+		PublishedSkills.search(searchCopy,1,function(data){
 			$scope.searching = false;
 			$scope.bestiaries = data;
-			$scope.bestiaryPager = new SearchPublishedBestiaryPager(searchCopy,$scope.bestiaries,2);
+			$scope.SkillsPager = new SearchPublishedSkillsPager(searchCopy,$scope.bestiaries,2);
 		});
 	}
 
@@ -314,12 +314,12 @@ var publishedBestiaryCtrl = function ($scope,bestiary,bestiaries,owner,$routePar
 };
 
 //don't load controller until we've gotten the data from the server
-publishedBestiaryCtrl.resolve = {
-	bestiary: ['PublishedBestiary','$q','$route','Auth',function(PublishedBestiary, $q, $route, Auth){
-			if($route.current.params.bestiaryId){
+publishedSkillsCtrl.resolve = {
+	Skills: ['PublishedSkills','$q','$route','Auth',function(PublishedSkills, $q, $route, Auth){
+			if($route.current.params.SkillsId){
 				var deferred = $q.defer();
 				Auth.executeOnLogin(function(){
-					PublishedBestiary.get($route.current.params.bestiaryId,function(data) {
+					PublishedSkills.get($route.current.params.SkillsId,function(data) {
 						deferred.resolve(data);
 					}, function(errorData) {
 						deferred.reject();
@@ -330,13 +330,13 @@ publishedBestiaryCtrl.resolve = {
 			else
 				return {};
 		}],
-	bestiaries: ['PublishedBestiary','$q','$route','Auth',function(PublishedBestiary, $q, $route, Auth){
-			if($route.current.params.bestiaryType){
+	bestiaries: ['PublishedSkills','$q','$route','Auth',function(PublishedSkills, $q, $route, Auth){
+			if($route.current.params.SkillsType){
 				var deferred = $q.defer();
 				Auth.executeOnLogin(function(){
-					var type = $route.current.params.bestiaryType;
-					if(PublishedBestiary.listConstants[type]){
-						var retrievalFunction = PublishedBestiary.listConstants[type].retrievalFunction;
+					var type = $route.current.params.SkillsType;
+					if(PublishedSkills.listConstants[type]){
+						var retrievalFunction = PublishedSkills.listConstants[type].retrievalFunction;
 						var page = $route.current.params.page || 1;
 						retrievalFunction(page,function(data) {
 							deferred.resolve(data);
@@ -352,7 +352,7 @@ publishedBestiaryCtrl.resolve = {
 			else if($route.current.params.userId){
 				var deferred = $q.defer();
 				var page = $route.current.params.page || 1;
-				PublishedBestiary.getByUser($route.current.params.userId,page,function(data) {
+				PublishedSkills.getByUser($route.current.params.userId,page,function(data) {
 					deferred.resolve(data);
 				}, function(errorData) {
 					deferred.reject();
@@ -380,4 +380,4 @@ publishedBestiaryCtrl.resolve = {
 		}]
 }
 
-angular.module('myApp').controller('publishedBestiaryCtrl',publishedBestiaryCtrl);
+angular.module('myApp').controller('publishedSkillsCtrl',publishedSkillsCtrl);

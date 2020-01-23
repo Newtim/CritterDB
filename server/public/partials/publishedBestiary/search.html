@@ -8,7 +8,7 @@
       </md-tooltip>
 		</md-button>
 		<h2 style="margin-left:0px;">
-			<span hide show-gt-xs><a ng-href="{{getPublishedBestiaryListPath()}}">Published Bestiaries</a> > </span>
+			<span hide show-gt-xs><a ng-href="{{getPublishedSkillsListPath()}}">Published Bestiaries</a> > </span>
 			<span><b>Search Bestiaries</b></span>
 		</h2>
 		<div class="right-side-controls">
@@ -52,7 +52,7 @@
   	</div>
 	</md-sidenav>
 	<!-- SEARCH -->
-	<md-content layout="column" infinite-scroll="bestiaryPager.loadNextPage()" threshold="250" can-load="!bestiaryPager.busy" class="search-bestiaries">
+	<md-content layout="column" infinite-scroll="SkillsPager.loadNextPage()" threshold="250" can-load="!SkillsPager.busy" class="search-bestiaries">
 		<form ng-submit="runSearch()" layout="row" layout-align="center center" class="search-input">
 			<md-input-container>
 				<label>Search by Name</label>
@@ -61,8 +61,8 @@
 		  <md-button class="md-raised md-primary" ng-disabled="searching" type="submit">Search</md-button>
 		</form>
 		<section layout="row">
-			<!-- BESTIARY LIST -->
-			<div ng-include="'assets/partials/publishedBestiary/bestiaryList.html'"></div>
+			<!-- Skills LIST -->
+			<div ng-include="'assets/partials/publishedSkills/SkillsList.html'"></div>
 		</section>
 	</md-content>
 </div>

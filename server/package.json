@@ -1,6 +1,6 @@
 {
-  "name": "bestiary-manager",
-  "description": "Bestiary Manager Server",
+  "name": "Skills-manager",
+  "description": "Skills Manager Server",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
