@@ -189,12 +189,17 @@ var StatBlock = new mongoose.Schema(
         _id : false
     });
 
+<<<<<<< HEAD
 var SkillSchema = new mongoose.Schema(
+=======
+var CreatureSchema = new mongoose.Schema(
+>>>>>>> dbe6c698249b1a0b1e1cb16cbb9b90f1c2dd1329
 	{
         name: {
             type: String,
             required: true
         },
+<<<<<<< HEAD
         skillId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Skill',
@@ -208,3 +213,30 @@ var SkillSchema = new mongoose.Schema(
     });
 
 module.exports = mongoose.model('Skill',SkillSchema);
+=======
+        bestiaryId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Bestiary',
+          index: true
+        },
+        publishedBestiaryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'PublishedBestiary',
+            index: true
+        },
+        flavor: {
+            type: CreatureFlavor,
+            default: {}
+        },
+        stats: {
+            type: StatBlock,
+            default: {}
+        },
+        sharing: {
+            type: SharingSchema,
+            default: {}
+        }
+    });
+
+module.exports = mongoose.model('Creature',CreatureSchema);
+>>>>>>> dbe6c698249b1a0b1e1cb16cbb9b90f1c2dd1329

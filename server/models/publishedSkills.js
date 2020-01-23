@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 var autopopulate = require('mongoose-autopopulate');
+<<<<<<< HEAD
 var Skill = require('./skill');
+=======
+var Creature = require('./skill');
+>>>>>>> dbe6c698249b1a0b1e1cb16cbb9b90f1c2dd1329
 var Like = require('./like');
 var Favorite = require('./favorite');
 var Comment = require('./comment');

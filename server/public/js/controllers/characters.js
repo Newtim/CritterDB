@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-var bestiaryCtrl = function ($scope, Creature, Skills, Skills, $location, bestiaries, Auth, $mdDialog, $mdMedia, CreatureClipboard, $mdToast, CreatureFilter, CreatureAPI, $cookies, $window) {
-=======
 var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiaries, Auth, $mdDialog, $mdMedia, CreatureClipboard, $mdToast, CreatureFilter, CreatureAPI, $cookies, $window) {
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
 	$scope.bestiaries = bestiaries;
 	$scope.Skills = Skills;
 
@@ -182,11 +178,7 @@ var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiari
 };
 
 //don't load controller until we've gotten the data from the server
-<<<<<<< HEAD
-.resolve = {
-=======
 SkillsCtrl.resolve = {
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
 			Skills: ['Skills','$q','$route','Auth','$location',function(Skills, $q, $route, Auth, $location){
 				if($route.current.params.SkillsId){
 					var deferred = $q.defer();
@@ -234,8 +226,4 @@ SkillsCtrl.resolve = {
 			}]
 		}
 
-<<<<<<< HEAD
-angular.module('myApp').controller('',);
-=======
 angular.module('myApp').controller('SkillsCtrl',SkillsCtrl);
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
