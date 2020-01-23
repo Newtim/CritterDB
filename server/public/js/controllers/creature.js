@@ -1,5 +1,5 @@
 
-var creatureCtrl = function($scope,creature,Creature,$routeParams,Skills,$location,CreatureData,$mdMedia,$mdDialog,CreatureAPI,ChallengeRatingCalculator,TextUtils,Auth,CreatureClipboard) {
+var creatureCtrl = function($scope,creature,Creature,$routeParams,Bestiary,$location,CreatureData,$mdMedia,$mdDialog,CreatureAPI,ChallengeRatingCalculator,TextUtils,Auth,CreatureClipboard) {
 	$scope.creature = creature;
 	$scope.Auth = Auth;
 	$scope.CreatureClipboard = CreatureClipboard;
@@ -256,11 +256,11 @@ var creatureCtrl = function($scope,creature,Creature,$routeParams,Skills,$locati
 			$scope.armorType.changed();
 	},true);
 
-	$scope.returnToSkills = function(){
+	$scope.returnToBestiary = function(){
 		if($scope.creature._id)
-			$location.url("/Skills/view/"+$scope.creature.SkillsId);
-		else if($routeParams.SkillsId)
-			$location.url("/Skills/view/"+$routeParams.SkillsId);
+			$location.url("/bestiary/view/"+$scope.creature.bestiaryId);
+		else if($routeParams.bestiaryId)
+			$location.url("/bestiary/view/"+$routeParams.bestiaryId);
 	}
 
 	$scope.saveCreature = function(successCallback){
@@ -270,7 +270,7 @@ var creatureCtrl = function($scope,creature,Creature,$routeParams,Skills,$locati
 			});
 		}
 		else{
-			$scope.creature.SkillsId = $routeParams.SkillsId;
+			$scope.creature.bestiaryId = $routeParams.bestiaryId;
 			Creature.create($scope.creature,function(data){
 				$scope.creature = data;
 				if(successCallback)
@@ -282,29 +282,29 @@ var creatureCtrl = function($scope,creature,Creature,$routeParams,Skills,$locati
 	}
 
 	$scope.saveAndFinish = function(){
-		$scope.saveCreature($scope.returnToSkills);
+		$scope.saveCreature($scope.returnToBestiary);
 	}
 
 	$scope.$on("$destroy", function() {
 		$scope.saveCreature();
 	});
 
-	$scope.getSkillsPath = function(){
-		var SkillsId = "";
+	$scope.getBestiaryPath = function(){
+		var bestiaryId = "";
 		if($scope.creature._id)
-			SkillsId = $scope.creature.SkillsId;
-		else if($routeParams.SkillsId)
-			SkillsId = $routeParams.SkillsId;
-		return("/#/Skills/view/"+SkillsId);
+			bestiaryId = $scope.creature.bestiaryId;
+		else if($routeParams.bestiaryId)
+			bestiaryId = $routeParams.bestiaryId;
+		return("/#/bestiary/view/"+bestiaryId);
 	}
 
-	$scope.getSkillsListPath = function(){
-		return("/#/Skills/list");
+	$scope.getBestiaryListPath = function(){
+		return("/#/bestiary/list");
 	}
 
 	$scope.creatureApi = new CreatureAPI({
 		copy: Auth.isLoggedIn(),
-		share: (creature.Skills && Auth.user && creature.Skills.ownerId == Auth.user._id),
+		share: (creature.bestiary && Auth.user && creature.bestiary.ownerId == Auth.user._id),
 		export:true
 	});
 
@@ -406,12 +406,12 @@ var defaultCreature = {
 //don't load controller until we've gotten the data from the server
 creatureCtrl.resolve = {
 			creature: ['Creature',
-								'Skills',
+								'Bestiary',
 								'$q',
 								'$route',
 								'Auth',
 								'$location',
-								function(Creature, Skills, $q, $route, Auth, $location){
+								function(Creature, Bestiary, $q, $route, Auth, $location){
 				var deferred = $q.defer();
 				const rejectAndReroute = function() {
 					$location.path('/login');
@@ -420,10 +420,10 @@ creatureCtrl.resolve = {
 				Auth.executeOnLogin(function(){
 					if($route.current.params.creatureId){
 						Creature.get($route.current.params.creatureId,function(creatureData) {
-							// Try to get Skills info for creature (this should be cached so will be quick). It is OK if this
+							// Try to get bestiary info for creature (this should be cached so will be quick). It is OK if this
 							// fails, as this may just be a public view creature page.
-							Skills.get(creatureData.SkillsId,function(SkillsData) {
-								creatureData.Skills = SkillsData;
+							Bestiary.get(creatureData.bestiaryId,function(bestiaryData) {
+								creatureData.bestiary = bestiaryData;
 								deferred.resolve(creatureData);
 							}, function(errorData) {
 								deferred.resolve(creatureData);
@@ -432,13 +432,13 @@ creatureCtrl.resolve = {
 							rejectAndReroute();
 						});
 					}
-					else if($route.current.params.SkillsId){
-						//This means we must be creating a new creature and adding it to a Skills,
-						// so just grab data for the current Skills. This will be cached so it will
+					else if($route.current.params.bestiaryId){
+						//This means we must be creating a new creature and adding it to a bestiary,
+						// so just grab data for the current bestiary. This will be cached so it will
 						// be quick.
-						Skills.get($route.current.params.SkillsId,function(SkillsData) {
+						Bestiary.get($route.current.params.bestiaryId,function(bestiaryData) {
 							var creatureData = angular.copy(defaultCreature);
-							creatureData.Skills = SkillsData;
+							creatureData.bestiary = bestiaryData;
 							deferred.resolve(creatureData);
 						}, function(errorData) {
 							rejectAndReroute();

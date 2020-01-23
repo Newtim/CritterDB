@@ -14,8 +14,8 @@ var generateNewPersistentSession = function(existingSession,user,res,callback){
           if(err)
               callback(err);
           else {
-              res.cookie('Skillsmanagertoken',persistentSession.token);
-              res.cookie('Skillsmanagerusername',user.username);
+              res.cookie('bestiarymanagertoken',persistentSession.token);
+              res.cookie('bestiarymanagerusername',user.username);
               callback(null,doc);
           }
       });
@@ -37,8 +37,8 @@ var generateNewPersistentSession = function(existingSession,user,res,callback){
 //  rememberme (boolean)
 //}
 //alternately instead of password, can accept cookies with persistent session info:
-//cookies.Skillsmanagertoken (hashed token set by server, front end doesn't have to touch)
-//cookies.Skillsmanagerusername (username identifier set by server, front end doesn't have to touch)
+//cookies.bestiarymanagertoken (hashed token set by server, front end doesn't have to touch)
+//cookies.bestiarymanagerusername (username identifier set by server, front end doesn't have to touch)
 //These cookies will be set after a successful authentication with 'rememberme' set to true.
 exports.authenticate = function(req, res){
 	var query = {};
@@ -55,10 +55,10 @@ exports.authenticate = function(req, res){
     }
     else if (user) {
       if(!req.body.password){
-        if(!req.cookies.Skillsmanagertoken)
+        if(!req.cookies.bestiarymanagertoken)
           res.status(400).send("Authentication failed. Password required.");
         else{
-          var persistentToken = req.cookies.Skillsmanagertoken;
+          var persistentToken = req.cookies.bestiarymanagertoken;
           PersistentSession.findOne({'username':user.username}, function(err,persistentSession){
             if(err)
               res.status(400).send("Authentication failed.");
@@ -115,8 +115,8 @@ exports.authenticate = function(req, res){
 }
 
 exports.revokeAuthentication = function(req, res) {
-  res.clearCookie('Skillsmanagertoken');
-  res.clearCookie('Skillsmanagerusername');
+  res.clearCookie('bestiarymanagertoken');
+  res.clearCookie('bestiarymanagerusername');
   res.send();
 }
 

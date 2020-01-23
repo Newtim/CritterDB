@@ -10,10 +10,10 @@
 		<!-- MOBILE TITLE -->
 		<h2 style="margin-left:0px;">
 			<span hide show-gt-sm>
-				<a ng-href="{{getUserSkillsListPath(Skills.owner)}}" style="cursor:pointer;">{{Skills.owner.username}}'s Published Bestiaries</a>
+				<a ng-href="{{getUserBestiaryListPath(bestiary.owner)}}" style="cursor:pointer;">{{bestiary.owner.username}}'s Published Bestiaries</a>
 				<span> > </span>
 			</span>
-			<b>{{Skills.name}}</b>
+			<b>{{bestiary.name}}</b>
 		</h2>
 		<div class="right-side-controls">
 			<md-button ng-click="toggleExclusive('clipboardNav');" ng-if="!CreatureClipboard.isEmpty()" class="md-icon-button md-mini" aria-label="Clipboard">
@@ -26,16 +26,16 @@
 	      </div>
 			</md-button>
 			<!-- NON-MOBILE BUTTONS -->
-			<md-button hide show-gt-xs ng-click="printSkills()" class="md-icon-button md-mini" aria-label="Print Skills">
+			<md-button hide show-gt-xs ng-click="printBestiary()" class="md-icon-button md-mini" aria-label="Print Bestiary">
 				<md-icon>print</md-icon>
 				<md-tooltip md-direction="left">
-	        Print Skills (try CTRL-P for larger text)
+	        Print Bestiary (try CTRL-P for larger text)
 	      </md-tooltip>
 			</md-button>
-			<md-button hide show-gt-xs ng-click="copySkills()" class="md-icon-button md-mini" aria-label="Copy Skills">
+			<md-button hide show-gt-xs ng-click="copyBestiary()" class="md-icon-button md-mini" aria-label="Copy Bestiary">
 				<md-icon>content_copy</md-icon>
 				<md-tooltip md-direction="left">
-	        Copy Skills
+	        Copy Bestiary
 	      </md-tooltip>
 			</md-button>
 			<md-button hide show-gt-xs ng-click="toggleExclusive('filterNav');" class="md-icon-button md-mini" aria-label="Filters">
@@ -44,16 +44,16 @@
 	        Filter Creatures
 	      </md-tooltip>
 			</md-button>
-			<md-button hide show-gt-xs ng-click="editPublishedSkills($event)" ng-if="isOwner()" class="md-icon-button md-mini" aria-label="Edit">
+			<md-button hide show-gt-xs ng-click="editPublishedBestiary($event)" ng-if="isOwner()" class="md-icon-button md-mini" aria-label="Edit">
 				<md-icon>mode_edit</md-icon>
 				<md-tooltip md-direction="left">
-	        Edit Published Skills
+	        Edit Published Bestiary
 	      </md-tooltip>
 			</md-button>
-			<md-button hide show-gt-xs ng-click="deletePublishedSkills($event)" ng-if="isOwner()" class="md-icon-button md-mini" aria-label="Delete">
+			<md-button hide show-gt-xs ng-click="deletePublishedBestiary($event)" ng-if="isOwner()" class="md-icon-button md-mini" aria-label="Delete">
 				<md-icon>delete</md-icon>
 				<md-tooltip md-direction="left">
-	        Delete Published Skills
+	        Delete Published Bestiary
 	      </md-tooltip>
 			</md-button>
 			<!-- MOBILE MENU BUTTON -->
@@ -69,8 +69,8 @@
 	<section class="sidenav-wrapper content-section md-whiteframe-3dp" layout="column" layout-gt-sm="row" style="overflow:auto;"
 		<!-- SMALL SCREENS (Mobile) -->
 		<div hide-gt-sm>
-			<md-content class="published-Skills-details md-padding">
-				<h1>{{Skills.name}}</h1>
+			<md-content class="published-bestiary-details md-padding">
+				<h1>{{bestiary.name}}</h1>
 				<div ng-if="canInteract()" class="action-bar">
 					<md-button ng-click="toggleLike()" class="md-icon-button like" aria-label="Like">
 						<md-icon ng-if="!isLiked()">favorite_border</md-icon>
@@ -88,24 +88,24 @@
 					</md-button>
 				</div>
 				<md-divider></md-divider>
-				<span class="caption">published by <a class="username text-color-secondary" ng-href="{{getUserSkillsListPath(Skills.owner)}}">{{Skills.owner.username}}</a></span>
-				<p btf-markdown="Skills.description" class="md-body-1"></p>
+				<span class="caption">published by <a class="username text-color-secondary" ng-href="{{getUserBestiaryListPath(bestiary.owner)}}">{{bestiary.owner.username}}</a></span>
+				<p btf-markdown="bestiary.description" class="md-body-1"></p>
 			</md-content>
 			<md-content>
 				<div class="fallingColumns">
-					<ng-stat-block ng-repeat="creature in Skills.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem" size="{{getStatBlockSize($index)}}"></ng-stat-block>
+					<ng-stat-block ng-repeat="creature in bestiary.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem" size="{{getStatBlockSize($index)}}"></ng-stat-block>
 				</div>
 			</md-content>
 			<!-- Comments -->
 			<md-content class="md-padding">
-				<div ng-include="'assets/partials/publishedSkills/comments.html'"></div>
+				<div ng-include="'assets/partials/publishedBestiary/comments.html'"></div>
 			</md-content>
 			<!-- - -->
 		</div>
 		<!-- WIDE SCREENS (Computer) -->
 		<div hide show-gt-sm style="display:flex;width:100%;">
-			<md-content class="published-Skills-details md-padding" style="width:50%;">
-				<h1>{{Skills.name}}</h1>
+			<md-content class="published-bestiary-details md-padding" style="width:50%;">
+				<h1>{{bestiary.name}}</h1>
 				<div ng-if="canInteract()" class="action-bar">
 					<md-button ng-click="toggleLike()" class="md-icon-button like" aria-label="Like">
 						<md-icon ng-if="!isLiked()">favorite_border</md-icon>
@@ -123,15 +123,15 @@
 					</md-button>
 				</div>
 				<md-divider></md-divider>
-				<span class="caption">published by <a class="username text-color-secondary" ng-href="{{getUserSkillsListPath(Skills.owner)}}">{{Skills.owner.username}}</a></span>
-				<p btf-markdown="Skills.description" class="md-body-1"></p>
+				<span class="caption">published by <a class="username text-color-secondary" ng-href="{{getUserBestiaryListPath(bestiary.owner)}}">{{bestiary.owner.username}}</a></span>
+				<p btf-markdown="bestiary.description" class="md-body-1"></p>
 				<!-- Comments -->
-				<div ng-include="'assets/partials/publishedSkills/comments.html'"></div>
+				<div ng-include="'assets/partials/publishedBestiary/comments.html'"></div>
 				<!-- - -->
 			</md-content>
 			<md-content style="width:50%;">
 				<div class="fallingColumns">
-					<ng-stat-block ng-repeat="creature in Skills.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem" size="{{getStatBlockSize($index)}}"></ng-stat-block>
+					<ng-stat-block ng-repeat="creature in bestiary.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem" size="{{getStatBlockSize($index)}}"></ng-stat-block>
 				</div>
 			</md-content>
 		</div>
@@ -220,7 +220,7 @@
 	      </div>
 		  </md-toolbar>
 	  	<md-list>
-	  		<md-list-item ng-click="copySkills()" ng-if="canInteract()">
+	  		<md-list-item ng-click="copyBestiary()" ng-if="canInteract()">
 	  			<md-icon style="margin-bottom:16px">content_copy</md-icon>
 	  			<p>Copy</p>
 	 			</md-list-item>
@@ -228,15 +228,15 @@
 	  			<md-icon style="margin-bottom:16px">filter_list</md-icon>
 	  			<p>Filter</p>
 	 			</md-list-item>
-	 			<md-list-item ng-click="close('menuNav');editPublishedSkills($event);" ng-if="isOwner()">
+	 			<md-list-item ng-click="close('menuNav');editPublishedBestiary($event);" ng-if="isOwner()">
 	  			<md-icon style="margin-bottom:16px">mode_edit</md-icon>
 	  			<p>Edit</p>
 	 			</md-list-item>
-	 			<md-list-item ng-click="close('menuNav');deletePublishedSkills($event);" ng-if="isOwner()">
+	 			<md-list-item ng-click="close('menuNav');deletePublishedBestiary($event);" ng-if="isOwner()">
 	  			<md-icon style="margin-bottom:16px">delete</md-icon>
 	  			<p>Delete</p>
 	 			</md-list-item>
-	 			<md-list-item ng-click="close('menuNav');printSkills();">
+	 			<md-list-item ng-click="close('menuNav');printBestiary();">
 	  			<md-icon style="margin-bottom:16px">print</md-icon>
 	  			<p>Print</p>
 	 			</md-list-item>
@@ -248,9 +248,9 @@
 <!-- print -->
 <div class="no-screen">
 	<h1>
-		{{Skills.name}}
+		{{bestiary.name}}
 	</h1>
 	<div class="fallingColumns">
-		<ng-stat-block ng-repeat="creature in Skills.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem no-page-break" no-resize="true"></ng-stat-block>
+		<ng-stat-block ng-repeat="creature in bestiary.creatures | orderBy:'name' | filter:creatureFilter.isCreatureShown" creature="creature" creature-api="creatureApi" class="fallingColumnsItem no-page-break" no-resize="true"></ng-stat-block>
 	</div>
 </div>

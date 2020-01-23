@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var autopopulate = require('mongoose-autopopulate');
 
-var SkillsSchema = new mongoose.Schema(
+var BestiarySchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -20,6 +20,6 @@ var SkillsSchema = new mongoose.Schema(
       type: Date
     }
   });
-SkillsSchema.plugin(autopopulate);
+BestiarySchema.plugin(autopopulate);
 
-module.exports = mongoose.model('Skills',SkillsSchema);
+module.exports = mongoose.model('Bestiary',BestiarySchema);

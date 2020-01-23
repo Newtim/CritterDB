@@ -1,13 +1,13 @@
-angular.module('myApp').factory("SearchPublishedSkillsPager", function(PublishedSkills,PublishedSkillsPager) {
+angular.module('myApp').factory("SearchPublishedBestiaryPager", function(PublishedBestiary,PublishedBestiaryPager) {
 
-  var SearchPublishedSkillsPager = function(search,startingData,startingNextPage){
-    PublishedSkillsPager.call(this,"",startingData,startingNextPage);
+  var SearchPublishedBestiaryPager = function(search,startingData,startingNextPage){
+    PublishedBestiaryPager.call(this,"",startingData,startingNextPage);
     this.retrievalFunction = function(page,callback) {
-      PublishedSkills.search(search,page,callback);
+      PublishedBestiary.search(search,page,callback);
     }
   }
   
-  SearchPublishedSkillsPager.prototype = PublishedSkillsPager.prototype;
+  SearchPublishedBestiaryPager.prototype = PublishedBestiaryPager.prototype;
 
-  return SearchPublishedSkillsPager;
+  return SearchPublishedBestiaryPager;
 });

@@ -169,23 +169,23 @@ angular.module('myApp').factory("Creature", function($resource,$sce,CachedResour
 		}, error);
 	}
 
-	var currentSkillsId = undefined;	//track the current Skills - clear cache if it changes, otherwise cache things. This way we have one Skills's worth of creatures cached but no more - don't want to use too much memory.
+	var currentBestiaryId = undefined;	//track the current bestiary - clear cache if it changes, otherwise cache things. This way we have one Bestiary's worth of creatures cached but no more - don't want to use too much memory.
   var pagesAdded = {};
-  function updateCurrentSkills(id,cache){
-  	currentSkillsId = id;
+  function updateCurrentBestiary(id,cache){
+  	currentBestiaryId = id;
   	pagesAdded = {};
   	cache.clear();
   }
-  function isDataInCache(SkillsId,page){
-  	return(currentSkillsId != undefined &&
-  					SkillsId == currentSkillsId &&
+  function isDataInCache(bestiaryId,page){
+  	return(currentBestiaryId != undefined &&
+  					bestiaryId == currentBestiaryId &&
   					pagesAdded[page]);
   }
 
-  CreatureAPI.getAllForSkills = function(SkillsId, success, error){
-  	if(!isDataInCache(SkillsId,1)){	//if Skills has changed, pull new data from server
-  		updateCurrentSkills(SkillsId,this.cache);	//update current Skills
-	    $resource("/api/bestiaries/:id/creatures").query({ 'id': SkillsId}, (function(data){
+  CreatureAPI.getAllForBestiary = function(bestiaryId, success, error){
+  	if(!isDataInCache(bestiaryId,1)){	//if bestiary has changed, pull new data from server
+  		updateCurrentBestiary(bestiaryId,this.cache);	//update current bestiary
+	    $resource("/api/bestiaries/:id/creatures").query({ 'id': bestiaryId}, (function(data){
 	    	pagesAdded[1] = true;
 	    	for(var i=0;i<data.length;i++){
 	    		this.cache.add(data[i]._id,data[i]);
@@ -195,24 +195,24 @@ angular.module('myApp').factory("Creature", function($resource,$sce,CachedResour
 	    		success(data);
 	    }).bind(this),error);
 	  }
-	  else {		//if Skills hasn't changed, get data from cache
+	  else {		//if bestiary hasn't changed, get data from cache
 	  	var allCreatures = this.cache.getAll();
-	  	var SkillsCreatures = [];
+	  	var bestiaryCreatures = [];
 	  	for(var i=0;i<allCreatures.length;i++){
-	  		if(allCreatures[i].SkillsId == SkillsId)
-	  			SkillsCreatures.push(allCreatures[i]);
+	  		if(allCreatures[i].bestiaryId == bestiaryId)
+	  			bestiaryCreatures.push(allCreatures[i]);
 	  	}
 	  	setTimeout(function(){
-	  		success(SkillsCreatures);
+	  		success(bestiaryCreatures);
 	  	});
 	  }
   }
 
-  CreatureAPI.getAllForPublishedSkills = function(publishedSkillsId, page, success, error){
-  	if(!isDataInCache(publishedSkillsId,page)){	//if Skills has changed, pull new data from server
-  		updateCurrentSkills(publishedSkillsId,this.cache);	//update current Skills
+  CreatureAPI.getAllForPublishedBestiary = function(publishedBestiaryId, page, success, error){
+  	if(!isDataInCache(publishedBestiaryId,page)){	//if bestiary has changed, pull new data from server
+  		updateCurrentBestiary(publishedBestiaryId,this.cache);	//update current bestiary
   		var query = {
-  			'id': publishedSkillsId,
+  			'id': publishedBestiaryId,
   			'page': page
   		};
 	    $resource("/api/publishedbestiaries/:id/creatures/:page").query(query, (function(data){
@@ -225,25 +225,25 @@ angular.module('myApp').factory("Creature", function($resource,$sce,CachedResour
 	    		success(data);
 	    }).bind(this),error);
 	  }
-	  else {		//if Skills hasn't changed, get data from cache
+	  else {		//if bestiary hasn't changed, get data from cache
 	  	var allCreatures = this.cache.getAll();
-	  	var SkillsCreatures = [];
+	  	var bestiaryCreatures = [];
 	  	for(var i=0;i<allCreatures.length;i++){
-	  		if(allCreatures[i].publishedSkillsId == publishedSkillsId)
-	  			SkillsCreatures.push(allCreatures[i]);
+	  		if(allCreatures[i].publishedBestiaryId == publishedBestiaryId)
+	  			bestiaryCreatures.push(allCreatures[i]);
 	  	}
 	  	setTimeout(function(){
-	  		success(SkillsCreatures);
+	  		success(bestiaryCreatures);
 	  	});
 	  }
   }
 
-  CreatureAPI.deleteAllForPublishedSkills = function(publishedSkillsId, success, error){
+  CreatureAPI.deleteAllForPublishedBestiary = function(publishedBestiaryId, success, error){
 		var query = {
-			'id': publishedSkillsId
+			'id': publishedBestiaryId
 		};
     $resource("/api/publishedbestiaries/:id/creatures").delete(query, (function(data){
-    	if(publishedSkillsId==currentSkillsId)
+    	if(publishedBestiaryId==currentBestiaryId)
     		pagesAdded = {};
     	if(success)
     		success(data);

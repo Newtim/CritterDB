@@ -41,47 +41,47 @@ myApp.config(['$routeProvider',
 				controller: 'userCtrl'
 			}).
 			when('/home',{
-				templateUrl: 'assets/partials/Skills/list.html?@@hash',
-				controller: '',
-				resolve: .resolve
+				templateUrl: 'assets/partials/bestiary/list.html?@@hash',
+				controller: 'bestiaryCtrl',
+				resolve: bestiaryCtrl.resolve
 			}).
 			when('/about',{
 				templateUrl: 'assets/partials/about.html?@@hash'
 			}).
-			when('/Skills/view/:SkillsId',{
-				templateUrl: 'assets/partials/Skills/view.html?@@hash',
-				controller: '',
-				resolve: .resolve
+			when('/bestiary/view/:bestiaryId',{
+				templateUrl: 'assets/partials/bestiary/view.html?@@hash',
+				controller: 'bestiaryCtrl',
+				resolve: bestiaryCtrl.resolve
 			}).
-			when('/Skills/list',{
-				templateUrl: 'assets/partials/Skills/list.html?@@hash',
-				controller: '',
-				resolve: .resolve
+			when('/bestiary/list',{
+				templateUrl: 'assets/partials/bestiary/list.html?@@hash',
+				controller: 'bestiaryCtrl',
+				resolve: bestiaryCtrl.resolve
 			}).
-			when('/Skills/add/:SkillsId',{
+			when('/bestiary/add/:bestiaryId',{
 				templateUrl: 'assets/partials/creature/create.html?@@hash',
 				controller: 'creatureCtrl',
 				resolve: creatureCtrl.resolve
 			}).
-			when('/publishedSkills/view/:SkillsId',{
-				templateUrl: 'assets/partials/publishedSkills/view.html?@@hash',
-				controller: 'publishedSkillsCtrl',
-				resolve: publishedSkillsCtrl.resolve
+			when('/publishedbestiary/view/:bestiaryId',{
+				templateUrl: 'assets/partials/publishedBestiary/view.html?@@hash',
+				controller: 'publishedBestiaryCtrl',
+				resolve: publishedBestiaryCtrl.resolve
 			}).
-			when('/publishedSkills/list/:SkillsType',{
-				templateUrl: 'assets/partials/publishedSkills/list.html?@@hash',
-				controller: 'publishedSkillsCtrl',
-				resolve: publishedSkillsCtrl.resolve
+			when('/publishedbestiary/list/:bestiaryType',{
+				templateUrl: 'assets/partials/publishedBestiary/list.html?@@hash',
+				controller: 'publishedBestiaryCtrl',
+				resolve: publishedBestiaryCtrl.resolve
 			}).
-			when('/publishedSkills/search',{
-				templateUrl: 'assets/partials/publishedSkills/search.html?@@hash',
-				controller: 'publishedSkillsCtrl',
-				resolve: publishedSkillsCtrl.resolve
+			when('/publishedbestiary/search',{
+				templateUrl: 'assets/partials/publishedBestiary/search.html?@@hash',
+				controller: 'publishedBestiaryCtrl',
+				resolve: publishedBestiaryCtrl.resolve
 			}).
 			when('/user/:userId/publishedbestiaries',{
-				templateUrl: 'assets/partials/publishedSkills/list.html?@@hash',
-				controller: 'publishedSkillsCtrl',
-				resolve: publishedSkillsCtrl.resolve
+				templateUrl: 'assets/partials/publishedBestiary/list.html?@@hash',
+				controller: 'publishedBestiaryCtrl',
+				resolve: publishedBestiaryCtrl.resolve
 			}).
 			when('/creature/view/:creatureId',{
 				templateUrl: 'assets/partials/creature/view.html?@@hash',

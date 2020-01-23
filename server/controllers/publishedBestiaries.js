@@ -1,6 +1,6 @@
 
 //Get mongoose model
-var PublishedSkills = require('../models/publishedSkills');
+var PublishedBestiary = require('../models/publishedBestiary');
 var Comment = require('../models/comment');
 var Creature = require('../models/creature');
 var jwt = require("jsonwebtoken");
@@ -11,15 +11,15 @@ var mongodb = require("mongodb");
 var PAGE_SIZE = 10;
 var MAX_PAGE = 20;
 
-var authenticateSkillsByOwner = function(req, Skills, callback){
+var authenticateBestiaryByOwner = function(req, bestiary, callback){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
         jwt.verify(token,config.secret,function(err,decoded){
             if(err)
                 callback("Failed to authenticate token.");
             else{
-                var SkillsOwnerId = Skills.owner._id || Skills.owner;
-                if(decoded._doc._id != SkillsOwnerId)
+                var bestiaryOwnerId = bestiary.owner._id || bestiary.owner;
+                if(decoded._doc._id != bestiaryOwnerId)
                     callback("Not authorized for access.");
                 else
                     callback(null);
@@ -61,26 +61,26 @@ var populateOptions = [
     }
 ];
 
-//Trims a Skills so that the returned document only includes key details
-function getTrimmedSkills(Skills){
+//Trims a bestiary so that the returned document only includes key details
+function getTrimmedBestiary(bestiary){
     var trimmed = {
-        _id: Skills._id,
-        name: Skills.name,
-        description: Skills.description,
-        owner: Skills.owner,
-        numLikes: Skills.likes.length,
-        numFavorites: Skills.favorites.length,
-        numComments: Skills.comments.length
+        _id: bestiary._id,
+        name: bestiary.name,
+        description: bestiary.description,
+        owner: bestiary.owner,
+        numLikes: bestiary.likes.length,
+        numFavorites: bestiary.favorites.length,
+        numComments: bestiary.comments.length
     };
-    if(Skills.creatures)
-        trimmed.numCreatures = Skills.creatures.length;
+    if(bestiary.creatures)
+        trimmed.numCreatures = bestiary.creatures.length;
     return(trimmed);
 }
 
-function getTrimmedSkillsList(SkillsList){
+function getTrimmedBestiaryList(bestiaryList){
     var trimmedList = [];
-    for(var i=0;i<SkillsList.length;i++)
-        trimmedList.push(getTrimmedSkills(SkillsList[i]));
+    for(var i=0;i<bestiaryList.length;i++)
+        trimmedList.push(getTrimmedBestiary(bestiaryList[i]));
     return(trimmedList);
 }
 
@@ -88,7 +88,7 @@ exports.findById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    PublishedSkills.findOne(query, function (err, doc) {
+    PublishedBestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
@@ -97,13 +97,13 @@ exports.findById = function(req, res) {
             res.send(doc);
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 };
 
 exports.findAll = function(req, res) {
-    PublishedSkills.find({}, function(err, docs) {
+    PublishedBestiary.find({}, function(err, docs) {
         if(err){
             res.status(400).send(err.message);
         }
@@ -118,12 +118,12 @@ exports.create = function(req, res) {
     //'owner' can be confusing.
     if(req.body && req.body.owner && req.body.owner._id)
         req.body.owner = req.body.owner._id;
-    var publishedSkills = new PublishedSkills(req.body);
-    authenticateSkillsByOwner(req, publishedSkills, function(err){
+    var publishedBestiary = new PublishedBestiary(req.body);
+    authenticateBestiaryByOwner(req, publishedBestiary, function(err){
         if(err)
             res.status(400).send(err);
         else{
-            publishedSkills.save(function (err, doc) {
+            publishedBestiary.save(function (err, doc) {
                 if(err) {
                     res.status(400).send(err.message);
                 }
@@ -149,12 +149,12 @@ exports.updateById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    PublishedSkills.findOne(query, function (err, existingDoc) {
+    PublishedBestiary.findOne(query, function (err, existingDoc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(existingDoc){
-            authenticateSkillsByOwner(req, existingDoc, function(err){
+            authenticateBestiaryByOwner(req, existingDoc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
@@ -174,7 +174,7 @@ exports.updateById = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 }
@@ -183,22 +183,22 @@ exports.deleteById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    PublishedSkills.findOne(query, function (err, doc) {
+    PublishedBestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
-                    PublishedSkills.findByIdAndRemove(query, function(err, doc, result){
+                    PublishedBestiary.findByIdAndRemove(query, function(err, doc, result){
                         if(err)
                             res.status(400).send(err.message);
                         else{
                             //Delete all creatures as well
                             var deleteQuery = {
-                                publishedSkillsId: id
+                                publishedBestiaryId: id
                             };
                             Creature.remove(deleteQuery).exec();
                             //Don't wait on creature deletion to return
@@ -209,7 +209,7 @@ exports.deleteById = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 }
@@ -223,8 +223,8 @@ var generateLikeForUserId = function(userId){
 
 //Creates a like for the current user, if one does not already exist in the list of likes
 exports.createLike = function(req, res) {
-    var SkillsId = req.params.id;
-    var query = {'_id':SkillsId};
+    var bestiaryId = req.params.id;
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -242,7 +242,7 @@ exports.createLike = function(req, res) {
                     popularity: 1
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -257,8 +257,8 @@ exports.createLike = function(req, res) {
 
 //Deletes a like for the current user, if one exists
 exports.deleteLike = function(req, res) {
-    var SkillsId = req.params.id;
-    var query = {'_id':SkillsId};
+    var bestiaryId = req.params.id;
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -277,7 +277,7 @@ exports.deleteLike = function(req, res) {
                     popularity: -1
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -299,8 +299,8 @@ var generateFavoriteForUserId = function(userId){
 
 //Creates a favorite for the current user, if one does not already exist in the list of favorites
 exports.createFavorite = function(req, res) {
-    var SkillsId = req.params.id;
-    var query = {'_id':SkillsId};
+    var bestiaryId = req.params.id;
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -315,7 +315,7 @@ exports.createFavorite = function(req, res) {
                     favorites: favorite
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -330,8 +330,8 @@ exports.createFavorite = function(req, res) {
 
 //Deletes a favorite for the current user, if one exists
 exports.deleteFavorite = function(req, res) {
-    var SkillsId = req.params.id;
-    var query = {'_id':SkillsId};
+    var bestiaryId = req.params.id;
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -347,7 +347,7 @@ exports.deleteFavorite = function(req, res) {
                     }
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -365,7 +365,7 @@ exports.findRecent = function(req, res) {
     var sort = {
         _id: -1
     };
-    PublishedSkills.find().
+    PublishedBestiary.find().
         sort(sort).
         skip(PAGE_SIZE * (page-1)).
         limit(PAGE_SIZE).
@@ -374,7 +374,7 @@ exports.findRecent = function(req, res) {
                 res.status(400).send(err.message);
             }
             else{
-                var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                 res.send(trimmedBestiaries);
             }
         });
@@ -385,7 +385,7 @@ exports.findPopular = function(req, res) {
     var sort = {
         popularity: -1
     };
-    PublishedSkills.find().
+    PublishedBestiary.find().
         sort(sort).
         skip(PAGE_SIZE * (page-1)).
         limit(PAGE_SIZE).
@@ -394,7 +394,7 @@ exports.findPopular = function(req, res) {
                 res.status(400).send(err.message);
             }
             else{
-                var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                 res.send(trimmedBestiaries);
             }
         });
@@ -416,7 +416,7 @@ exports.findFavorites = function(req, res) {
                     }
                 }
             };
-            PublishedSkills.find(query).
+            PublishedBestiary.find(query).
                 sort(sort).
                 skip(PAGE_SIZE * (page-1)).
                 limit(PAGE_SIZE).
@@ -425,7 +425,7 @@ exports.findFavorites = function(req, res) {
                         res.status(400).send(err.message);
                     }
                     else{
-                        var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                        var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                         res.send(trimmedBestiaries);
                     }
                 });
@@ -445,7 +445,7 @@ exports.findOwned = function(req, res) {
             var query = {
                 owner: currentUserId
             };
-            PublishedSkills.find(query).
+            PublishedBestiary.find(query).
                 sort(sort).
                 skip(PAGE_SIZE * (page-1)).
                 limit(PAGE_SIZE).
@@ -454,7 +454,7 @@ exports.findOwned = function(req, res) {
                         res.status(400).send(err.message);
                     }
                     else{
-                        var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                        var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                         res.send(trimmedBestiaries);
                     }
                 });
@@ -470,7 +470,7 @@ exports.findByOwner = function(req, res) {
     var query = {
         owner: req.params.id
     };
-    PublishedSkills.find(query).
+    PublishedBestiary.find(query).
         sort(sort).
         skip(PAGE_SIZE * (page-1)).
         limit(PAGE_SIZE).
@@ -479,15 +479,15 @@ exports.findByOwner = function(req, res) {
                 res.status(400).send(err.message);
             }
             else{
-                var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                 res.send(trimmedBestiaries);
             }
         });
 }
 
 exports.createComment = function(req, res) {
-    var SkillsId = req.params.id;
-    var query = {'_id':SkillsId};
+    var bestiaryId = req.params.id;
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -504,7 +504,7 @@ exports.createComment = function(req, res) {
                     comments: comment
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -518,7 +518,7 @@ exports.createComment = function(req, res) {
 }
 
 exports.updateCommentById = function(req, res) {
-    var SkillsId = req.params.id;
+    var bestiaryId = req.params.id;
     var commentId = req.params.commentId;
     var options = {
         new: true           //retrieves new object from database and returns that as doc
@@ -529,7 +529,7 @@ exports.updateCommentById = function(req, res) {
             res.status(400).send(err);
         else{
             var query = {
-                _id: SkillsId,
+                _id: bestiaryId,
                 comments: {
                     $elemMatch: {
                         author: currentUserId,      //make sure the author is editing it, not someone else
@@ -542,7 +542,7 @@ exports.updateCommentById = function(req, res) {
                     'comments.$.text': req.body.text    //update only mutable fields
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -559,9 +559,9 @@ exports.updateCommentById = function(req, res) {
 }
 
 exports.deleteCommentById = function(req, res) {
-    var SkillsId = req.params.id;
+    var bestiaryId = req.params.id;
     var commentId = req.params.commentId;
-    var query = {'_id':SkillsId};
+    var query = {'_id':bestiaryId};
     var options = {
         new: true           //retrieves new object from database and returns that as doc
     }
@@ -578,7 +578,7 @@ exports.deleteCommentById = function(req, res) {
                     }
                 }
             };
-            PublishedSkills.findOneAndUpdate(query, update, options)
+            PublishedBestiary.findOneAndUpdate(query, update, options)
                 .populate(populateOptions)
                 .exec(function (err, doc) {
                     if(err)
@@ -607,7 +607,7 @@ exports.search = function(req, res) {
         query.author = req.body.author;
     }
     console.log("query: "+JSON.stringify(query));
-    PublishedSkills.find(query).
+    PublishedBestiary.find(query).
         sort(sort).
         skip(PAGE_SIZE * (page-1)).
         limit(PAGE_SIZE).
@@ -616,7 +616,7 @@ exports.search = function(req, res) {
                 res.status(400).send(err.message);
             }
             else{
-                var trimmedBestiaries = getTrimmedSkillsList(docs); //trim docs of creatures, comments, etc to improve speeds
+                var trimmedBestiaries = getTrimmedBestiaryList(docs); //trim docs of creatures, comments, etc to improve speeds
                 res.send(trimmedBestiaries);
             }
         });
@@ -638,7 +638,7 @@ exports.findMostPopular = function(req, res) {
             $gt: objIdMin
         }
     };
-    PublishedSkills.find(query).
+    PublishedBestiary.find(query).
         sort(sort).
         limit(1).
         exec(function (err, docs) {
@@ -654,7 +654,7 @@ exports.findMostPopular = function(req, res) {
         });
 }
 
-exports.findCreaturesBySkills = function(req, res) {
+exports.findCreaturesByBestiary = function(req, res) {
     var page = req.params.page;
     var id = req.params.id;
     var sort = {
@@ -666,7 +666,7 @@ exports.findCreaturesBySkills = function(req, res) {
             $regex: new RegExp(query.name, "i")
         };
     }
-    query.publishedSkillsId = id;
+    query.publishedBestiaryId = id;
     Creature.find(query).
         sort(sort).
         skip(creatures.PAGE_SIZE * (page-1)).
@@ -680,21 +680,21 @@ exports.findCreaturesBySkills = function(req, res) {
         });
 };
 
-exports.deleteCreaturesBySkills = function(req, res) {
+exports.deleteCreaturesByBestiary = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    PublishedSkills.findOne(query, function (err, doc) {
+    PublishedBestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
                     var deleteQuery = {
-                        publishedSkillsId: id
+                        publishedBestiaryId: id
                     };
                     Creature.remove(deleteQuery).exec(function(err, docs){
                         if(err)
@@ -707,7 +707,7 @@ exports.deleteCreaturesBySkills = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 };

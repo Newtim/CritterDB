@@ -1,10 +1,10 @@
 <span class="md-title comments-header"><md-icon class="comments-icon">comment</md-icon>{{getCommentsHeader()}}</span>
 <md-divider></md-divider>
 <md-list>
-	<md-list-item class="md-2-line comment" ng-repeat="comment in Skills.comments | orderBy:'_id'">
+	<md-list-item class="md-2-line comment" ng-repeat="comment in bestiary.comments | orderBy:'_id'">
 		<div class="md-list-item-text" layout="column">
 			<p>
-				<a class="username" style="color:inherit;" ng-href="{{getUserSkillsListPath(comment.author)}}">{{comment.author.username}}</a>
+				<a class="username" style="color:inherit;" ng-href="{{getUserBestiaryListPath(comment.author)}}">{{comment.author.username}}</a>
 				<span ng-if="isOwnerOfComment(comment)" class="controls">
 					<md-button ng-click="editComment(comment)" class="md-icon-button">
 						<md-icon >mode_edit</md-icon>

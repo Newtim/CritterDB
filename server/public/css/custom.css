@@ -346,7 +346,7 @@ div.body-area md-card span.md-body-1 {
   text-overflow: ellipsis;
 }
 
-div.body-area md-sidenav.Skills-sidenav.md-locked-open {
+div.body-area md-sidenav.bestiary-sidenav.md-locked-open {
   width: 100%;
   height: 100%;
   max-width: 100%;
@@ -354,7 +354,7 @@ div.body-area md-sidenav.Skills-sidenav.md-locked-open {
   left: 0px;
 }
 @media (min-width:801px) {
-  div.body-area md-sidenav.Skills-sidenav.md-locked-open {
+  div.body-area md-sidenav.bestiary-sidenav.md-locked-open {
     width: 600px;
     left: 100%;
     position: static;
@@ -699,14 +699,14 @@ md-dialog.share-modal md-dialog-content div[layout="column"] {
   margin: 0 auto;
 }
 
-div.body-area .published-Skills-details h1 {
+div.body-area .published-bestiary-details h1 {
   font-size: 32px;
   font-weight: 600;
   line-height: 32px;
   margin: 32px 0 18px 0;
 }
 
-div.body-area .published-Skills-details span.caption {
+div.body-area .published-bestiary-details span.caption {
   font-size: 12px;
   margin-left: 8px;
   color: #727272;
@@ -739,27 +739,27 @@ md-list-item.comment span.controls md-icon {
   line-height: 1.35;
 }
 
-div.body-area .published-Skills-details md-icon.comments-icon {
+div.body-area .published-bestiary-details md-icon.comments-icon {
   margin-right: 8px;
 }
 
-div.body-area .published-Skills-details span.comments-header {
+div.body-area .published-bestiary-details span.comments-header {
   font-size: 18px;
 }
 
-div.body-area .published-Skills-details .action-bar {
+div.body-area .published-bestiary-details .action-bar {
   float: right;
   margin-top: -6px;
 }
 
-div.body-area .published-Skills-details .action-bar button {
+div.body-area .published-bestiary-details .action-bar button {
   padding-left: 0px;
   padding-right: 0px;
   margin-left: 0px;
   margin-right: 0px;
 }
 
-div.body-area .published-Skills-details .action-bar button.like md-icon {
+div.body-area .published-bestiary-details .action-bar button.like md-icon {
   font-size: 23px;
   height: 23px;
   width: 23px;
@@ -777,18 +777,18 @@ div.body-area .published-Skills-details .action-bar button.like md-icon {
   color: #FFD700;
 }
 
-div.body-area .published-Skills-card .action-bar {
+div.body-area .published-bestiary-card .action-bar {
   float: right;
 }
 
-div.body-area .published-Skills-card .action-bar md-icon {
+div.body-area .published-bestiary-card .action-bar md-icon {
   height: 20px;
   width: 20px;
   font-size: 20px;
   line-height: 20px;
 }
 
-div.body-area .published-Skills-card .Skills-name {
+div.body-area .published-bestiary-card .bestiary-name {
   display: inline-block;
   max-width: calc(100% - 110px);  /*110px is width of action bar*/
 }
@@ -801,14 +801,14 @@ a.username:hover {
   text-decoration: underline;
 }
 
-md-menu.Skills-list button.open-menu {
+md-menu.bestiary-list button.open-menu {
   text-transform: none;
   font-size: 20px;
   margin-left: 0;
   padding: 0 2px;
 }
 
-md-menu.Skills-list button.open-menu md-icon.drop-down {
+md-menu.bestiary-list button.open-menu md-icon.drop-down {
   line-height: 22px;
   width: 20px;
   margin-left: -4px;
@@ -855,37 +855,37 @@ div.body-area .home-page-right {
   margin-right: 7px;
 }
 
-div.body-area .home-page-left .published-Skills-details {
+div.body-area .home-page-left .published-bestiary-details {
   width: 100%;
   margin-top: 8px;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
 }
 
-div.body-area .home-page-left .published-Skills-details h1 {
+div.body-area .home-page-left .published-bestiary-details h1 {
   margin-top: 6px;
   padding-right: 88px;
 }
 
-div.body-area .home-page-left .published-Skills-details h1 .md-button {
+div.body-area .home-page-left .published-bestiary-details h1 .md-button {
   position: absolute;
   right: 0px;
   top: 14px;
   margin-top: 0px;
 }
 @media (min-width:960px) {
-  div.body-area .home-page-left .published-Skills-details h1 .md-button {
+  div.body-area .home-page-left .published-bestiary-details h1 .md-button {
     top: 24px;
   }
 }
 
-div.body-area .home-page-left .published-Skills-creatures {
+div.body-area .home-page-left .published-bestiary-creatures {
   width: 100%;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
 
-div.toggle-Skills-view-area {
+div.toggle-bestiary-view-area {
   margin-left: 50%;
   transform: translateX(-50%);
 
@@ -901,7 +901,7 @@ div.toggle-Skills-view-area {
   box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.6);
 }
 
-div.toggle-Skills-view-area .md-button.md-icon-button {
+div.toggle-bestiary-view-area .md-button.md-icon-button {
   width: 25px;
   height: 25px;
   padding: 0;
@@ -909,7 +909,7 @@ div.toggle-Skills-view-area .md-button.md-icon-button {
   margin: 0 2.5px;
 }
 
-div.toggle-Skills-view-area button md-icon {
+div.toggle-bestiary-view-area button md-icon {
   font-size: 20px;
   width: 20px;
   height: 20px;

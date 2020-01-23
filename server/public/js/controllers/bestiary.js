@@ -1,30 +1,26 @@
 
-<<<<<<< HEAD
-var bestiaryCtrl = function ($scope, Creature, Skills, Skills, $location, bestiaries, Auth, $mdDialog, $mdMedia, CreatureClipboard, $mdToast, CreatureFilter, CreatureAPI, $cookies, $window) {
-=======
-var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiaries, Auth, $mdDialog, $mdMedia, CreatureClipboard, $mdToast, CreatureFilter, CreatureAPI, $cookies, $window) {
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
+var bestiaryCtrl = function ($scope, Creature, Bestiary, bestiary, $location, bestiaries, Auth, $mdDialog, $mdMedia, CreatureClipboard, $mdToast, CreatureFilter, CreatureAPI, $cookies, $window) {
 	$scope.bestiaries = bestiaries;
-	$scope.Skills = Skills;
+	$scope.bestiary = bestiary;
 
-	$scope.Skills.creaturesLoading = true;
+	$scope.bestiary.creaturesLoading = true;
 	var loadCreatures = function(){
-		if($scope.Skills._id){
-			Creature.getAllForSkills($scope.Skills._id,function(data){
-				$scope.Skills.creaturesLoading = false;
-				$scope.Skills.creatures = data;
+		if($scope.bestiary._id){
+			Creature.getAllForBestiary($scope.bestiary._id,function(data){
+				$scope.bestiary.creaturesLoading = false;
+				$scope.bestiary.creatures = data;
 			});
 		}
 	}
 	loadCreatures();
 
-	$scope.unsavedSkills = {
-		_id: Skills._id,
-		name: Skills.name+"",
-		description: Skills.description+""
+	$scope.unsavedBestiary = {
+		_id: bestiary._id,
+		name: bestiary.name+"",
+		description: bestiary.description+""
 	};
 
-	var VIEW_MODE_COOKIE = "Skills-view-mode";
+	var VIEW_MODE_COOKIE = "bestiary-view-mode";
 	$scope.view = {
 		modes: [
 			{
@@ -64,32 +60,32 @@ var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiari
 		$mdDialog.show(confirm).then(function() {
 			Creature.delete(creature._id);
 			//Don't wait for delete to actually finish so that the UI feels more responsive.
-			var index = $scope.Skills.creatures.indexOf(creature);
+			var index = $scope.bestiary.creatures.indexOf(creature);
 			if(index!=-1)
-				$scope.Skills.creatures.splice(index,1);
+				$scope.bestiary.creatures.splice(index,1);
 			if($scope.preview.creature && $scope.preview.creature._id == creature._id)
 				$scope.preview.creature = undefined;
 		});
 	}
 
 	$scope.addCreature = function(){
-		$location.url("/Skills/add/"+$scope.Skills._id);
+		$location.url("/bestiary/add/"+$scope.bestiary._id);
 	}
 
-	$scope.goToSkills = function(id){
-		$location.url("/Skills/view/"+id);
+	$scope.goToBestiary = function(id){
+		$location.url("/bestiary/view/"+id);
 	}
 
-	$scope.createSkills = function(){
-		var newSkills = Skills.generateNewSkills(Auth.user._id);
-		Skills.create(newSkills,function(data){
-			$scope.goToSkills(data._id);
+	$scope.createBestiary = function(){
+		var newBestiary = Bestiary.generateNewBestiary(Auth.user._id);
+		Bestiary.create(newBestiary,function(data){
+			$scope.goToBestiary(data._id);
 		},function(err){
 			console.log("error: "+err);
 		});
 	}
 
-	$scope.deleteSkills = function(ev,Skills){
+	$scope.deleteBestiary = function(ev,bestiary){
 		var confirm = $mdDialog.confirm()
 			.title("Confirm Deletion")
 			.textContent("This collection will be permanently deleted. Would you like to proceed?")
@@ -98,55 +94,55 @@ var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiari
 			.ok("Delete")
 			.cancel("Cancel");
 		$mdDialog.show(confirm).then(function() {
-			Skills.delete(Skills._id);
+			Bestiary.delete(bestiary._id);
 			//Don't wait for delete to actually finish so that the UI feels more responsive.
-			var index = $scope.bestiaries.indexOf(Skills);
+			var index = $scope.bestiaries.indexOf(bestiary);
 			if(index!=-1)
 				$scope.bestiaries.splice(index,1);
 		});
 	}
 
-	$scope.printSkills = function(ev,Skills){
+	$scope.printBestiary = function(ev,bestiary){
 		$window.print();
 	}
 
-	$scope.publishSkills = function(ev,Skills){
+	$scope.publishBestiary = function(ev,bestiary){
 		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
     $mdDialog.show({
-      controller: publishSkillsCtrl,
-      templateUrl: '/assets/partials/Skills/publish-Skills.html',
+      controller: publishBestiaryCtrl,
+      templateUrl: '/assets/partials/bestiary/publish-bestiary.html',
       parent: angular.element(document.body),
       targetEvent: ev,
       clickOutsideToClose:true,
       locals: {
-      	'baseSkills': Skills,
-      	'publishedSkills': undefined
+      	'baseBestiary': bestiary,
+      	'publishedBestiary': undefined
       },
       fullscreen: useFullScreen
     });
 	}
 
-	$scope.doesSkillsNeedEdits = function(Skills){
-		return(Skills.name==Skills.newSkillsModel.name || Skills.description==Skills.newSkillsModel.description);
+	$scope.doesBestiaryNeedEdits = function(bestiary){
+		return(bestiary.name==Bestiary.newBestiaryModel.name || bestiary.description==Bestiary.newBestiaryModel.description);
 	}
 
-	$scope.getSkillsListPath = function(){
-		return("/#/Skills/list");
+	$scope.getBestiaryListPath = function(){
+		return("/#/bestiary/list");
 	}
 
-	$scope.getSkillsPath = function(Skills){
-		return("/#/Skills/view/"+Skills._id);
+	$scope.getBestiaryPath = function(bestiary){
+		return("/#/bestiary/view/"+bestiary._id);
 	}
 
 	$scope.cancelSave = function(){
-		$scope.unsavedSkills = $scope.Skills;
+		$scope.unsavedBestiary = $scope.bestiary;
 	}
 
-	$scope.saveSkillsInfo = function(){
-		if($scope.unsavedSkills._id){
-			Skills.update($scope.unsavedSkills._id,$scope.unsavedSkills,function(data){
-				$scope.Skills.name = data.name;
-				$scope.Skills.description = data.description;
+	$scope.saveBestiaryInfo = function(){
+		if($scope.unsavedBestiary._id){
+			Bestiary.update($scope.unsavedBestiary._id,$scope.unsavedBestiary,function(data){
+				$scope.bestiary.name = data.name;
+				$scope.bestiary.description = data.description;
 			},function(err){
 				console.log("error: "+err);
 			});
@@ -174,21 +170,17 @@ var SkillsCtrl = function ($scope, Creature, Skills, Skills, $location, bestiari
 		for(var i=0;i<creatures.length;i++){
 			var newCreature = angular.copy(creatures[i]);
 			newCreature._id = undefined;
-			newCreature.publishedSkillsId = undefined;
-			newCreature.SkillsId = $scope.Skills._id;
+			newCreature.publishedBestiaryId = undefined;
+			newCreature.bestiaryId = $scope.bestiary._id;
 			Creature.create(newCreature,finishedCopy,finishedCopy);
 		}
 	}
 };
 
 //don't load controller until we've gotten the data from the server
-<<<<<<< HEAD
-.resolve = {
-=======
-SkillsCtrl.resolve = {
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
-			Skills: ['Skills','$q','$route','Auth','$location',function(Skills, $q, $route, Auth, $location){
-				if($route.current.params.SkillsId){
+bestiaryCtrl.resolve = {
+			bestiary: ['Bestiary','$q','$route','Auth','$location',function(Bestiary, $q, $route, Auth, $location){
+				if($route.current.params.bestiaryId){
 					var deferred = $q.defer();
 					Auth.executeOnLogin(function(){
 						if(!Auth.isLoggedIn()){
@@ -196,11 +188,11 @@ SkillsCtrl.resolve = {
 							deferred.reject();
 						}
 						else{
-							Skills.get($route.current.params.SkillsId,function(data) {
+							Bestiary.get($route.current.params.bestiaryId,function(data) {
 								deferred.resolve(data);
-								//save that Skills was active, but no need to do it until after resolving
+								//save that bestiary was active, but no need to do it until after resolving
 								data.lastActive = new Date();
-								Skills.update(data._id,data);
+								Bestiary.update(data._id,data);
 							}, function(errorData) {
 								deferred.reject();
 							});
@@ -211,8 +203,8 @@ SkillsCtrl.resolve = {
 				else
 					return {};
 			}],
-			bestiaries: ['Skills','$q','$route','Auth','$location',function(Skills, $q, $route, Auth, $location){
-				if($route.current.params.SkillsId==undefined){
+			bestiaries: ['Bestiary','$q','$route','Auth','$location',function(Bestiary, $q, $route, Auth, $location){
+				if($route.current.params.bestiaryId==undefined){
 					var deferred = $q.defer();
 					Auth.executeOnLogin(function(){
 						if(!Auth.isLoggedIn()){
@@ -220,7 +212,7 @@ SkillsCtrl.resolve = {
 							deferred.reject();
 						}
 						else{
-							Skills.getAllForUser(Auth.user._id,function(data) {
+							Bestiary.getAllForUser(Auth.user._id,function(data) {
 								deferred.resolve(data);
 							}, function(errorData) {
 								deferred.reject();
@@ -234,8 +226,4 @@ SkillsCtrl.resolve = {
 			}]
 		}
 
-<<<<<<< HEAD
-angular.module('myApp').controller('',);
-=======
-angular.module('myApp').controller('SkillsCtrl',SkillsCtrl);
->>>>>>> beed8de426f6eafcd2055f02fc021af5edad97a0
+angular.module('myApp').controller('bestiaryCtrl',bestiaryCtrl);

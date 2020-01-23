@@ -6,25 +6,25 @@
 				<a>Published Bestiaries</a>
 				<span> > </span>
 			</span>
-			<md-menu class="Skills-list">
-        <md-button aria-label="Skills list selection" ng-click="$mdOpenMenu($event)" class="open-menu">
+			<md-menu class="bestiary-list">
+        <md-button aria-label="Bestiary list selection" ng-click="$mdOpenMenu($event)" class="open-menu">
           <b>
-            {{SkillsType}}
+            {{bestiaryType}}
           </b>
           <md-icon class="drop-down">arrow_drop_down</md-icon>
         </md-button>
         <md-menu-content width="3" >
         	<md-menu-item>
-            <md-button ng-href="{{getCurrentSkillsListType().path}}" md-menu-align-target aria-label="Switch Skills list type">
+            <md-button ng-href="{{getCurrentBestiaryListType().path}}" md-menu-align-target aria-label="Switch bestiary list type">
                 <div layout="row">
-                  <p>{{getCurrentSkillsListType().name}}</p>
+                  <p>{{getCurrentBestiaryListType().name}}</p>
                 </div>
             </md-button>
           </md-menu-item>
-          <md-menu-item ng-repeat="SkillsListType in SkillsListTypes" ng-if="SkillsListType.type!=getCurrentSkillsListType().type">
-            <md-button ng-href="{{SkillsListType.path}}" aria-label="Switch Skills list type">
+          <md-menu-item ng-repeat="bestiaryListType in bestiaryListTypes" ng-if="bestiaryListType.type!=getCurrentBestiaryListType().type">
+            <md-button ng-href="{{bestiaryListType.path}}" aria-label="Switch bestiary list type">
                 <div layout="row">
-                  <p>{{SkillsListType.name}}</p>
+                  <p>{{bestiaryListType.name}}</p>
                 </div>
             </md-button>
           </md-menu-item>
@@ -80,6 +80,6 @@
       <md-button ng-click="CreatureClipboard.clear();close('clipboardNav');" class="md-raised">Clear</md-button>
   	</div>
 	</md-sidenav>
-	<!-- Skills LIST -->
-	<div ng-include="'assets/partials/publishedSkills/SkillsList.html'" style="height:100%;"></div>
+	<!-- BESTIARY LIST -->
+	<div ng-include="'assets/partials/publishedBestiary/bestiaryList.html'" style="height:100%;"></div>
 </div>

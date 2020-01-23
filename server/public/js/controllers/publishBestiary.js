@@ -1,24 +1,24 @@
-var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Auth,PublishedSkills,$location,Creature) {
+var publishBestiaryCtrl = function ($scope,$mdDialog,baseBestiary,publishedBestiary,Auth,PublishedBestiary,$location,Creature) {
 
-	$scope.publishedSkills = (publishedSkills ? angular.copy(publishedSkills) : 
+	$scope.publishedBestiary = (publishedBestiary ? angular.copy(publishedBestiary) : 
 		{
-			'name': baseSkills.name,
-			'description': baseSkills.description,
+			'name': baseBestiary.name,
+			'description': baseBestiary.description,
 			'owner': Auth.user,
 			'creatures': []				//define later upon creation
 		});
 
-	$scope.newSkills = {
-		"_id": "NEW_Skills",
-		"name": "PUBLISH NEW Skills"
+	$scope.newBestiary = {
+		"_id": "NEW_BESTIARY",
+		"name": "PUBLISH NEW BESTIARY"
 	};
-	$scope.ownedPublishedBestiaries = [$scope.newSkills];
-	$scope.selectedSkills = publishedSkills || $scope.newSkills;
+	$scope.ownedPublishedBestiaries = [$scope.newBestiary];
+	$scope.selectedBestiary = publishedBestiary || $scope.newBestiary;
 
 	//Recursively gets all pages of owned bestiaries
 	function getOwnedPublishedBestiaries(page){
-		if(Auth.user && !publishedSkills){
-			PublishedSkills.getByUser(Auth.user._id,page,function(data){
+		if(Auth.user && !publishedBestiary){
+			PublishedBestiary.getByUser(Auth.user._id,page,function(data){
 				if(data && data.length > 0){
 					for(var i=0;i<data.length;i++){
 						$scope.ownedPublishedBestiaries.push(data[i]);
@@ -30,25 +30,25 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 	}
 	getOwnedPublishedBestiaries(1);
 
-	$scope.$watch("selectedSkills",function(newValue,oldValue){
+	$scope.$watch("selectedBestiary",function(newValue,oldValue){
 		if(oldValue!=newValue){
-			if(newValue==$scope.newSkills){
-				$scope.publishedSkills.name = baseSkills.name;
-				$scope.publishedSkills.description = baseSkills.description;
-				$scope.publishedSkills._id = undefined;
+			if(newValue==$scope.newBestiary){
+				$scope.publishedBestiary.name = baseBestiary.name;
+				$scope.publishedBestiary.description = baseBestiary.description;
+				$scope.publishedBestiary._id = undefined;
 			}
 			else{
-				$scope.publishedSkills = $scope.selectedSkills;
+				$scope.publishedBestiary = $scope.selectedBestiary;
 			}
 		}
 	},true);
 
-	function goToPublishedSkills(id){
-		$location.url("/publishedSkills/view/"+id);
+	function goToPublishedBestiary(id){
+		$location.url("/publishedbestiary/view/"+id);
 	}
 
-	function createCreaturesForSkills(baseSkills,publishedSkills,success,failure){
-		Creature.getAllForSkills(baseSkills._id,function(data){
+	function createCreaturesForBestiary(baseBestiary,publishedBestiary,success,failure){
+		Creature.getAllForBestiary(baseBestiary._id,function(data){
 			var createdCreatures = [];
 			if(data.length > 0){
 				var createdCreatureCount = 0;
@@ -59,11 +59,11 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 						success(createdCreatures);
 					}
 				}
-				for(var i=0;i<baseSkills.creatures.length;i++){
-					var newCreature = angular.copy(baseSkills.creatures[i]);
+				for(var i=0;i<baseBestiary.creatures.length;i++){
+					var newCreature = angular.copy(baseBestiary.creatures[i]);
 					newCreature._id = undefined;
-					newCreature.SkillsId = undefined;
-					newCreature.publishedSkillsId = publishedSkills._id;
+					newCreature.bestiaryId = undefined;
+					newCreature.publishedBestiaryId = publishedBestiary._id;
 					Creature.create(newCreature,finishedCreatingCreature,finishedCreatingCreature);
 				}
 			}
@@ -74,13 +74,13 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 		});
 	}
 
-	function publishSkills(baseSkills,publicSkills,success,failure){
-		if(publicSkills._id){	//just update existing Skills
-			PublishedSkills.update(publicSkills._id,publicSkills,function(data){
-				var publishedSkills = data;
-				Creature.deleteAllForPublishedSkills(publishedSkills._id,function(data){
-					createCreaturesForSkills(baseSkills,publishedSkills,function(data){
-						success(publishedSkills);
+	function publishBestiary(baseBestiary,publicBestiary,success,failure){
+		if(publicBestiary._id){	//just update existing bestiary
+			PublishedBestiary.update(publicBestiary._id,publicBestiary,function(data){
+				var publishedBestiary = data;
+				Creature.deleteAllForPublishedBestiary(publishedBestiary._id,function(data){
+					createCreaturesForBestiary(baseBestiary,publishedBestiary,function(data){
+						success(publishedBestiary);
 					},function(err){
 						failure(err);
 					});
@@ -91,11 +91,11 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 				failure(err);
 			});
 		}
-		else{	//make new Skills
-			PublishedSkills.create(publicSkills,function(data){
-				var publishedSkills = data;
-				createCreaturesForSkills(baseSkills,publishedSkills,function(data){
-					success(publishedSkills);
+		else{	//make new bestiary
+			PublishedBestiary.create(publicBestiary,function(data){
+				var publishedBestiary = data;
+				createCreaturesForBestiary(baseBestiary,publishedBestiary,function(data){
+					success(publishedBestiary);
 				},function(err){
 					failure(err);
 				});
@@ -114,11 +114,11 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 			.ok("Confirm")
 			.cancel("Cancel");
 		$mdDialog.show(confirm).then(function() {
-			publishSkills(baseSkills,$scope.publishedSkills,function(data){
-				goToPublishedSkills(data._id);
+			publishBestiary(baseBestiary,$scope.publishedBestiary,function(data){
+				goToPublishedBestiary(data._id);
 				$mdDialog.cancel();
 			},function(err){
-				console.error("Error publishing Skills: "+err);
+				console.error("Error publishing bestiary: "+err);
 			});
 		});
 
@@ -126,7 +126,7 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 
 	//updates, closes dialog, and gives the data to the resolved promise
 	$scope.update = function(){
-		PublishedSkills.update($scope.publishedSkills._id,$scope.publishedSkills,function(data){
+		PublishedBestiary.update($scope.publishedBestiary._id,$scope.publishedBestiary,function(data){
 				$mdDialog.hide(data);
 			},function(err){
 				console.log("error: "+err);
@@ -139,4 +139,4 @@ var publishSkillsCtrl = function ($scope,$mdDialog,baseSkills,publishedSkills,Au
 
 };
 
-angular.module('myApp').controller('publishSkillsCtrl',publishSkillsCtrl);
+angular.module('myApp').controller('publishBestiaryCtrl',publishBestiaryCtrl);

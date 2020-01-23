@@ -1,18 +1,18 @@
 
 //Get mongoose model
-var Skills = require('../models/Skills');
+var Bestiary = require('../models/bestiary');
 var Creature = require('../models/creature');
 var jwt = require("jsonwebtoken");
 var config = require("../config");
 
-var authenticateSkillsByOwner = function(req, Skills, callback){
+var authenticateBestiaryByOwner = function(req, bestiary, callback){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if(token){
         jwt.verify(token,config.secret,function(err,decoded){
             if(err)
                 callback("Failed to authenticate token.");
             else{
-                if(decoded._doc._id != Skills.ownerId)
+                if(decoded._doc._id != bestiary.ownerId)
                     callback("Not authorized for access.");
                 else
                     callback(null);
@@ -28,12 +28,12 @@ exports.findById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    Skills.findOne(query, function (err, doc) {
+    Bestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else
@@ -41,13 +41,13 @@ exports.findById = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 };
 
 exports.findAll = function(req, res) {
-    Skills.find({}, function(err, docs) {
+    Bestiary.find({}, function(err, docs) {
         if(err){
             res.status(400).send(err.message);
         }
@@ -58,13 +58,13 @@ exports.findAll = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    var Skills = new Skills(req.body);
+    var bestiary = new Bestiary(req.body);
 
-    authenticateSkillsByOwner(req, Skills, function(err){
+    authenticateBestiaryByOwner(req, bestiary, function(err){
         if(err)
             res.status(400).send(err);
         else{
-            Skills.save(function (err, doc) {
+            bestiary.save(function (err, doc) {
                 if(err) {
                     res.status(400).send(err.message);
                 }
@@ -79,22 +79,22 @@ exports.create = function(req, res) {
 exports.updateById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
-    var creature = new Skills(req.body);
+    var creature = new Bestiary(req.body);
     var options = {
         upsert: true,       //creates if not found
         new: true           //retrieves new object from database and returns that as doc
     }
 
-    Skills.findOne(query, function (err, doc) {
+    Bestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
-                    Skills.findOneAndUpdate(query, creature, options,function(err, doc){
+                    Bestiary.findOneAndUpdate(query, creature, options,function(err, doc){
                         if(err)
                             res.status(400).send(err.message);
                         else
@@ -104,7 +104,7 @@ exports.updateById = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 }
@@ -113,22 +113,22 @@ exports.deleteById = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    Skills.findOne(query, function (err, doc) {
+    Bestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
-                    Skills.findByIdAndRemove(query, function(err, doc, result){
+                    Bestiary.findByIdAndRemove(query, function(err, doc, result){
                         if(err)
                             res.status(400).send(err.message);
                         else{
                             //Delete all creatures as well
                             var deleteQuery = {
-                                SkillsId: id
+                                bestiaryId: id
                             };
                             Creature.remove(deleteQuery).exec();
                             //Don't wait on creature deletion to return
@@ -139,21 +139,21 @@ exports.deleteById = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found.");
+            res.status(400).send("Bestiary not found.");
         }
     });
 }
 
-exports.findCreaturesBySkills = function(req, res) {
+exports.findCreaturesByBestiary = function(req, res) {
     var id = req.params.id;
     var query = {'_id':id};
 
-    Skills.findOne(query, function (err, doc) {
+    Bestiary.findOne(query, function (err, doc) {
         if(err) {
             res.status(400).send(err.message);
         }
         else if(doc){
-            authenticateSkillsByOwner(req, doc, function(err){
+            authenticateBestiaryByOwner(req, doc, function(err){
                 if(err)
                     res.status(400).send(err);
                 else{
@@ -163,7 +163,7 @@ exports.findCreaturesBySkills = function(req, res) {
                             $regex: new RegExp(creaturesQuery.name, "i")
                         };
                     }
-                    creaturesQuery.SkillsId = doc._id;
+                    creaturesQuery.bestiaryId = doc._id;
                     Creature.find(creaturesQuery,
                         function(err, docs){
                             if(err)
@@ -176,7 +176,7 @@ exports.findCreaturesBySkills = function(req, res) {
             });
         }
         else{
-            res.status(400).send("Skills not found");
+            res.status(400).send("Bestiary not found");
         }
     });
 };

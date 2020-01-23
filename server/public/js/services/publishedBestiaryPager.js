@@ -1,13 +1,13 @@
-angular.module('myApp').factory("PublishedSkillsPager", function(PublishedSkills) {
+angular.module('myApp').factory("PublishedBestiaryPager", function(PublishedBestiary) {
 
-  var PublishedSkillsPager = function(listType,startingData,startingNextPage){
-    if(PublishedSkills.listConstants[listType])
-  	 this.retrievalFunction = PublishedSkills.listConstants[listType].retrievalFunction;
+  var PublishedBestiaryPager = function(listType,startingData,startingNextPage){
+    if(PublishedBestiary.listConstants[listType])
+  	 this.retrievalFunction = PublishedBestiary.listConstants[listType].retrievalFunction;
   	this.bestiaries = startingData || [];
   	this.nextPage = startingNextPage || 1;
   	this.busy = false;
   }
-  PublishedSkillsPager.prototype.loadNextPage = function() {
+  PublishedBestiaryPager.prototype.loadNextPage = function() {
   	if(!this.busy){
   		this.busy = true;
       if(this.retrievalFunction){
@@ -23,5 +23,5 @@ angular.module('myApp').factory("PublishedSkillsPager", function(PublishedSkills
   	}
   }
 
-  return PublishedSkillsPager;
+  return PublishedBestiaryPager;
 });

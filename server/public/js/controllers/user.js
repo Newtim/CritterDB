@@ -1,5 +1,5 @@
 
-var userCtrl = function ($scope,User,Skills,Auth,$location,$mdMedia,$mdDialog,$mdToast) {
+var userCtrl = function ($scope,User,Bestiary,Auth,$location,$mdMedia,$mdDialog,$mdToast) {
 
 	$scope.user = {
 		rememberme: true
@@ -14,14 +14,14 @@ var userCtrl = function ($scope,User,Skills,Auth,$location,$mdMedia,$mdDialog,$m
 		User.create($scope.user,function(data){
 			//Use auth service to login and generate token for user
 			Auth.login($scope.user.username,$scope.user.password,true,function(){
-				//Create a starting Skills for the new user
-				var newSkills = Skills.generateNewSkills(Auth.user._id);
-				newSkills.name = "Sample Skills";
-				newSkills.description = "This is your first Skills. It will contain any creatures that you can dream up!"
-				Skills.create(newSkills,function(data){
+				//Create a starting Bestiary for the new user
+				var newBestiary = Bestiary.generateNewBestiary(Auth.user._id);
+				newBestiary.name = "Sample Bestiary";
+				newBestiary.description = "This is your first bestiary. It will contain any creatures that you can dream up!"
+				Bestiary.create(newBestiary,function(data){
 					$scope.user.signupLoading = false;
-					//Take the user right to the Skills view so they can start adding creatures
-					$location.url("/Skills/view/"+data._id);
+					//Take the user right to the bestiary view so they can start adding creatures
+					$location.url("/bestiary/view/"+data._id);
 				},function(err){
 					console.log("error: "+err);
 				});

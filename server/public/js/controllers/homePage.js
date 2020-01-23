@@ -1,14 +1,14 @@
 
-var homePageCtrl = function ($scope,selectedSkills,SkillsList,PublishedSkills,CreatureClipboard,$location,Creature) {
-	$scope.selectedSkills = selectedSkills;
-	$scope.SkillsList = SkillsList;
+var homePageCtrl = function ($scope,selectedBestiary,bestiaryList,PublishedBestiary,CreatureClipboard,$location,Creature) {
+	$scope.selectedBestiary = selectedBestiary;
+	$scope.bestiaryList = bestiaryList;
 
-	$scope.selectedSkills.creaturesLoading = true;
+	$scope.selectedBestiary.creaturesLoading = true;
 	var loadCreatures = function(){
-		if($scope.selectedSkills._id){
-			Creature.getAllForPublishedSkills($scope.selectedSkills._id,1,function(data){
-				$scope.selectedSkills.creaturesLoading = false;
-				$scope.selectedSkills.creatures = data;
+		if($scope.selectedBestiary._id){
+			Creature.getAllForPublishedBestiary($scope.selectedBestiary._id,1,function(data){
+				$scope.selectedBestiary.creaturesLoading = false;
+				$scope.selectedBestiary.creatures = data;
 				if(!$scope.$$phase)
 					$scope.$digest();
 			});
@@ -19,34 +19,34 @@ var homePageCtrl = function ($scope,selectedSkills,SkillsList,PublishedSkills,Cr
 	$scope.CreatureClipboard = CreatureClipboard;
 
 	$scope.goToSearchPage = function(){
-		$location.path("/publishedSkills/search");
+		$location.path("/publishedbestiary/search");
 	}
 
-	$scope.getSkillsPath = function(Skills){
-		if(Skills)
-			return("/#/publishedSkills/view/"+Skills._id);
+	$scope.getBestiaryPath = function(bestiary){
+		if(bestiary)
+			return("/#/publishedbestiary/view/"+bestiary._id);
 		else
 			return("");
 	}
 
-	$scope.getUserSkillsListPath = function(user){
+	$scope.getUserBestiaryListPath = function(user){
 		if(user)
 			return("/#/user/"+user._id+"/publishedbestiaries");
 		else
 			return("");
 	}
 
-	$scope.SkillsSortFunction = function(Skills) {
-		return(-1*parseInt("0x"+Skills._id));
+	$scope.bestiarySortFunction = function(bestiary) {
+		return(-1*parseInt("0x"+bestiary._id));
 	}
 };
 
 //don't load controller until we've gotten the data from the server
 homePageCtrl.resolve = {
-	selectedSkills: ['PublishedSkills','$q','$route','Auth',function(PublishedSkills, $q, $route, Auth){
+	selectedBestiary: ['PublishedBestiary','$q','$route','Auth',function(PublishedBestiary, $q, $route, Auth){
 			var deferred = $q.defer();
 			Auth.executeOnLogin(function(){
-				PublishedSkills.getMostPopular(function(data) {
+				PublishedBestiary.getMostPopular(function(data) {
 					deferred.resolve(data);
 				}, function(errorData) {
 					deferred.reject();
@@ -54,10 +54,10 @@ homePageCtrl.resolve = {
 			});
 			return deferred.promise;
 		}],
-	SkillsList: ['PublishedSkills','$q','$route','Auth',function(PublishedSkills, $q, $route, Auth){
+	bestiaryList: ['PublishedBestiary','$q','$route','Auth',function(PublishedBestiary, $q, $route, Auth){
 			var deferred = $q.defer();
 			Auth.executeOnLogin(function(){
-				PublishedSkills.getRecent(1,function(data) {
+				PublishedBestiary.getRecent(1,function(data) {
 					deferred.resolve(data);
 				}, function(errorData) {
 					deferred.reject();
